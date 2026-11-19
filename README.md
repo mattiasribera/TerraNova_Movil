@@ -105,6 +105,7 @@ archivo en `TerraNova.Api/wwwroot/imagenes/`. En la base de datos solo queda la 
 | La API dice "No se pudo conectar/crear la base de datos" | Revise `CadenaSql` en `appsettings.Local.json` y que el servicio SQL Server esté iniciado |
 | Android Emulator no conecta | La app usa `10.0.2.2:5150` (ya configurado). En un **celular físico** cambie la IP en `TerraNova/Services/Configuracion.cs` por la de su PC |
 | Quiero empezar con la base limpia | Borre `TerraNovaDB` en SSMS y vuelva a ejecutar la API: se crea de nuevo |
+| Error `MSB3030 ... MsixContent ... no se encontró` al compilar en Windows | La ruta de la carpeta es demasiado larga (límite de 260 caracteres de Windows). Clone el repo en una ruta corta, por ejemplo `C:\Proyectos\TerraNova_Movil` |
 
 ## 6. Documentación
 
