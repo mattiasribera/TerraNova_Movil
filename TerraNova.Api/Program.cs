@@ -41,7 +41,13 @@ var app = builder.Build();
 // Primera ejecucion en una PC nueva: crea la base de datos con BaseDatos/ScriptCompleto.sql
 try
 {
-    InicializadorBaseDatos.Ejecutar(builder.Configuration.GetConnectionString("CadenaSql"), app.Logger);
+    if (InicializadorBaseDatos.Ejecutar(builder.Configuration.GetConnectionString("CadenaSql"), app.Logger))
+    {
+        // Base recien creada: se llena con datos de demostracion (agentes, propiedades con foto, ventas, visitas)
+        using var Alcance = app.Services.CreateScope();
+        var Resumen = GeneradorDemo.Generar(Alcance.ServiceProvider.GetRequiredService<TerraNovaDbContext>(), CompletarFotos: true);
+        app.Logger.LogWarning("Datos de demostración: {Resumen}", Resumen);
+    }
 }
 catch (Exception ex)
 {

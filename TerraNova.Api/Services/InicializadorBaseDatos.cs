@@ -8,7 +8,8 @@ namespace TerraNova.Api.Services
     // Si la base ya existe, no hace nada: nunca borra ni modifica datos existentes.
     public static class InicializadorBaseDatos
     {
-        public static void Ejecutar(string? CadenaConexion, ILogger Log)
+        // Devuelve true si la base se creo en esta ejecucion
+        public static bool Ejecutar(string? CadenaConexion, ILogger Log)
         {
             if (string.IsNullOrWhiteSpace(CadenaConexion))
                 throw new InvalidOperationException("Falta la cadena de conexión 'CadenaSql' (ver appsettings.Local.example.json).");
@@ -27,7 +28,7 @@ namespace TerraNova.Api.Services
                 if (Existe.ExecuteScalar() is not DBNull and not null)
                 {
                     Log.LogInformation("Base de datos '{Bd}' encontrada en {Servidor}.", NombreBd, Datos.DataSource);
-                    return;
+                    return false;
                 }
             }
 
@@ -61,6 +62,7 @@ namespace TerraNova.Api.Services
             }
 
             Log.LogWarning("Base de datos '{Bd}' creada con datos de prueba. Usuario: admin / Admin123!", NombreBd);
+            return true;
         }
     }
 }

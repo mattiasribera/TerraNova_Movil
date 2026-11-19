@@ -57,8 +57,18 @@ No hace falta abrir SSMS. Si la base ya existe, no la toca.
 | Usuario | Contraseña | Rol |
 |---|---|---|
 | `admin` | `Admin123!` | Admin |
+| `lucia`, `carlos`, `valeria` | `Agente123!` | Agente |
 
-Desde **Usuarios** puede crear agentes vinculados a un trabajador.
+Desde **Usuarios** puede crear más agentes vinculados a un trabajador.
+
+### 2.4 Datos de demostración
+
+Al crear la base, la API también genera **datos realistas de Santa Cruz** (todos obtienen los mismos):
+~65 propiedades con **foto y ubicación en el mapa**, ~65 clientes, 13 trabajadores, ventas con su comisión
+y ~150 visitas (historial + agenda de los próximos días).
+
+Si su base ya existía, puede cargarlos desde Swagger (http://localhost:5150/swagger) → `POST /api/Demo/Generar`.
+Solo se cargan una vez (no se duplican) y solo funciona en modo desarrollo.
 
 ---
 
