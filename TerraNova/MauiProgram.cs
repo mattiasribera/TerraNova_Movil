@@ -13,6 +13,9 @@ namespace TerraNova
         {
             // Formato de Bolivia en toda la app ($ 185.000, 3,5 %, fechas en español),
             // sin importar el idioma configurado en el celular o en Windows
+            // Cualquier error no controlado queda en errores.log (ver Services/RegistroErrores.cs)
+            RegistroErrores.Activar();
+
             var Bolivia = new System.Globalization.CultureInfo("es-BO");
             System.Globalization.CultureInfo.DefaultThreadCurrentCulture = Bolivia;
             System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = Bolivia;

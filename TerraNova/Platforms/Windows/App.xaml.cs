@@ -17,6 +17,9 @@ namespace TerraNova.WinUI
         public App()
         {
             this.InitializeComponent();
+
+            // Errores de la interfaz de Windows (WinUI): se guardan en errores.log para diagnosticarlos
+            UnhandledException += (_, E) => TerraNova.Services.RegistroErrores.Guardar("WinUI", E.Exception);
         }
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
