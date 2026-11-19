@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using TerraNova.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Models;
@@ -8,6 +9,7 @@ namespace TerraNova.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class VisitaController : ControllerBase
     {
         private readonly TerraNovaDbContext Contexto;
@@ -23,11 +25,13 @@ namespace TerraNova.Api.Controllers
         [Route("Lista")]
         public async Task<IActionResult> Lista()
         {
+            var EsAdminActual = User.EsAdmin();
+            var IdMio = User.IdTrabajador();
             var RespuestaApi = new ResponseAPI<List<VisitaDTO>>();
             var ListaVisitas = new List<VisitaDTO>();
             try
             {
-                var visitas = await Contexto.Visitas
+                var visitas = await Contexto.Visitas.Where(x => EsAdminActual || x.IdTrabajador == IdMio)
                     .Include(v => v.IdClienteNavigation)
                     .Include(v => v.IdPropiedadNavigation)
                     .Include(v => v.IdTrabajadorNavigation)
@@ -79,10 +83,12 @@ namespace TerraNova.Api.Controllers
         [Route("Proximas")]
         public async Task<IActionResult> Proximas()
         {
+            var EsAdminActual = User.EsAdmin();
+            var IdMio = User.IdTrabajador();
             var RespuestaApi = new ResponseAPI<List<VisitaDTO>>();
             try
             {
-                var visitas = await Contexto.Visitas
+                var visitas = await Contexto.Visitas.Where(x => EsAdminActual || x.IdTrabajador == IdMio)
                     .Where(v => v.Estado == "Programada")
                     .OrderBy(v => v.FechaVisita)
                     .Select(v => new VisitaDTO
@@ -113,6 +119,12 @@ namespace TerraNova.Api.Controllers
         [Route("Guardar")]
         public async Task<IActionResult> Guardar(VisitaDTO ObjVisita)
         {
+            if (!User.EsAdmin())
+            {
+                if (User.IdTrabajador() is not int Mio) return this.Prohibido("Su usuario no tiene un trabajador vinculado");
+                ObjVisita.IdTrabajador = Mio; // un agente siempre registra a su nombre
+            }
+
             var RespuestaAPI = new ResponseAPI<int>();
             try
             {
@@ -159,6 +171,12 @@ namespace TerraNova.Api.Controllers
         [Route("Eliminar/{Cod}")]
         public async Task<IActionResult> Eliminar(int Cod)
         {
+            if (!User.EsAdmin())
+            {
+                var Duenio = await Contexto.Visitas.Where(x => x.Id == Cod).Select(x => (int?)x.IdTrabajador).FirstOrDefaultAsync();
+                if (Duenio == null || !User.PuedeGestionar(Duenio.Value)) return this.Prohibido("Solo puede eliminar sus propias visitas");
+            }
+
             var RespuestaApi = new ResponseAPI<int>();
             try
             {
@@ -188,6 +206,12 @@ namespace TerraNova.Api.Controllers
         [Route("Buscar/{Cod}")]
         public async Task<IActionResult> Buscar(int Cod)
         {
+            if (!User.EsAdmin())
+            {
+                var Duenio = await Contexto.Visitas.Where(x => x.Id == Cod).Select(x => (int?)x.IdTrabajador).FirstOrDefaultAsync();
+                if (Duenio == null || !User.PuedeGestionar(Duenio.Value)) return this.Prohibido("Solo puede ver sus propias visitas");
+            }
+
             var RespuestaApi = new ResponseAPI<VisitaDTO>();
             var VisitaBuscada = new VisitaDTO();
             try
@@ -224,6 +248,13 @@ namespace TerraNova.Api.Controllers
         [Route("Modificar/{Cod}")]
         public async Task<IActionResult> Modificar(VisitaDTO NuevosDatos, int Cod)
         {
+            if (!User.EsAdmin())
+            {
+                var Duenio = await Contexto.Visitas.Where(x => x.Id == Cod).Select(x => (int?)x.IdTrabajador).FirstOrDefaultAsync();
+                if (Duenio == null || !User.PuedeGestionar(Duenio.Value)) return this.Prohibido("Solo puede modificar sus propias visitas");
+                NuevosDatos.IdTrabajador = Duenio.Value;
+            }
+
             var RespuestaApi = new ResponseAPI<int>();
             try
             {
@@ -270,10 +301,12 @@ namespace TerraNova.Api.Controllers
         [Route("PorPropiedad/{IdPropiedad}")]
         public async Task<IActionResult> PorPropiedad(int IdPropiedad)
         {
+            var EsAdminActual = User.EsAdmin();
+            var IdMio = User.IdTrabajador();
             var RespuestaApi = new ResponseAPI<List<VisitaDTO>>();
             try
             {
-                var visitas = await Contexto.Visitas
+                var visitas = await Contexto.Visitas.Where(x => EsAdminActual || x.IdTrabajador == IdMio)
                     .Where(v => v.IdPropiedad == IdPropiedad)
                     .Select(v => new VisitaDTO
                     {

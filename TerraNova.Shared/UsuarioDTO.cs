@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,5 +21,9 @@ namespace TerraNova.Shared
         public bool Activo { get; set; }
 
         public virtual TrabajadorDTO? IdTrabajadorNavigation { get; set; }
+
+        // Token JWT que devuelve el Login (solo viaja en esa respuesta)
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        public string? Token { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using TerraNova.Api.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Models;
 using TerraNova.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -7,13 +9,17 @@ namespace TerraNova.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = Permisos.RolAdmin)]
     public class UsuarioController : ControllerBase
     {
         private readonly TerraNovaDbContext Contexto;
 
-        public UsuarioController(TerraNovaDbContext contexto)
+        private readonly ServicioToken Tokens;
+
+        public UsuarioController(TerraNovaDbContext contexto, ServicioToken tokens)
         {
             Contexto = contexto;
+            Tokens = tokens;
         }
 
         [HttpGet]
@@ -203,6 +209,7 @@ namespace TerraNova.Api.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("Login")]
         public async Task<IActionResult> Login(LoginRequestDTO datos)
         {
@@ -222,7 +229,9 @@ namespace TerraNova.Api.Controllers
                         NombreUsuario = usuario.NombreUsuario,
                         Rol = usuario.Rol,
                         IdTrabajador = usuario.IdTrabajador,
-                        Activo = usuario.Activo
+                        Activo = usuario.Activo,
+                        // Token JWT: la app lo envia en cada peticion y la API valida permisos con el
+                        Token = Tokens.Generar(usuario)
                     };
                     RespuestaApi.Mensaje = "Inicio de sesión exitoso";
                 }

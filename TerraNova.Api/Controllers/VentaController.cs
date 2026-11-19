@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using TerraNova.Api.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Models;
 using TerraNova.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,7 @@ namespace TerraNova.Api.Controllers;
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class VentaController : ControllerBase
     {
         private readonly TerraNovaDbContext Contexto;
@@ -20,11 +23,13 @@ namespace TerraNova.Api.Controllers;
         [Route("Lista")]
         public async Task<IActionResult> Lista()
         {
+            var EsAdminActual = User.EsAdmin();
+            var IdMio = User.IdTrabajador();
             var RespuestaApi = new ResponseAPI<List<VentaDTO>>();
             var ListaVentas = new List<VentaDTO>();
             try
             {
-                var ventas = await Contexto.Ventas
+                var ventas = await Contexto.Ventas.Where(x => EsAdminActual || x.IdTrabajador == IdMio)
                     .Include(v => v.IdClienteNavigation)
                     .Include(v => v.IdPropiedadNavigation)
                     .Include(v => v.IdTrabajadorNavigation)
@@ -79,6 +84,12 @@ namespace TerraNova.Api.Controllers;
         [Route("Guardar")]
         public async Task<IActionResult> Guardar(VentaDTO ObjVenta)
         {
+            if (!User.EsAdmin())
+            {
+                if (User.IdTrabajador() is not int Mio) return this.Prohibido("Su usuario no tiene un trabajador vinculado");
+                ObjVenta.IdTrabajador = Mio; // un agente siempre registra a su nombre
+            }
+
             var RespuestaAPI = new ResponseAPI<int>();
 
             // Usamos una transacción: si algo falla a mitad de camino
@@ -136,6 +147,8 @@ namespace TerraNova.Api.Controllers;
         [Route("Eliminar/{Cod}")]
         public async Task<IActionResult> Eliminar(int Cod)
         {
+            if (!User.EsAdmin()) return this.Prohibido("Solo un administrador puede anular ventas");
+
             var RespuestaApi = new ResponseAPI<int>();
             using var transaccion = await Contexto.Database.BeginTransactionAsync();
             try
@@ -176,6 +189,12 @@ namespace TerraNova.Api.Controllers;
         [Route("Buscar/{Cod}")]
         public async Task<IActionResult> Buscar(int Cod)
         {
+            if (!User.EsAdmin())
+            {
+                var Duenio = await Contexto.Ventas.Where(x => x.Id == Cod).Select(x => (int?)x.IdTrabajador).FirstOrDefaultAsync();
+                if (Duenio == null || !User.PuedeGestionar(Duenio.Value)) return this.Prohibido("Solo puede ver sus propias ventas");
+            }
+
             var RespuestaApi = new ResponseAPI<VentaDTO>();
             var VentaBuscada = new VentaDTO();
             try
@@ -215,10 +234,12 @@ namespace TerraNova.Api.Controllers;
         [Route("PorCliente/{IdCliente}")]
         public async Task<IActionResult> PorCliente(int IdCliente)
         {
+            var EsAdminActual = User.EsAdmin();
+            var IdMio = User.IdTrabajador();
             var RespuestaApi = new ResponseAPI<List<VentaDTO>>();
             try
             {
-                var ventas = await Contexto.Ventas
+                var ventas = await Contexto.Ventas.Where(x => EsAdminActual || x.IdTrabajador == IdMio)
                     .Where(v => v.IdCliente == IdCliente)
                     .Select(v => new VentaDTO
                     {
@@ -251,10 +272,12 @@ namespace TerraNova.Api.Controllers;
         [Route("PorTrabajador/{IdTrabajador}")]
         public async Task<IActionResult> PorTrabajador(int IdTrabajador)
         {
+            var EsAdminActual = User.EsAdmin();
+            var IdMio = User.IdTrabajador();
             var RespuestaApi = new ResponseAPI<List<VentaDTO>>();
             try
             {
-                var ventas = await Contexto.Ventas
+                var ventas = await Contexto.Ventas.Where(x => EsAdminActual || x.IdTrabajador == IdMio)
                     .Where(v => v.IdTrabajador == IdTrabajador)
                     .Select(v => new VentaDTO
                     {
@@ -287,6 +310,13 @@ namespace TerraNova.Api.Controllers;
     [Route("Modificar/{Cod}")]
     public async Task<IActionResult> Modificar(VentaDTO NuevosDatos, int Cod)
     {
+            if (!User.EsAdmin())
+            {
+                var Duenio = await Contexto.Ventas.Where(x => x.Id == Cod).Select(x => (int?)x.IdTrabajador).FirstOrDefaultAsync();
+                if (Duenio == null || !User.PuedeGestionar(Duenio.Value)) return this.Prohibido("Solo puede modificar sus propias ventas");
+                NuevosDatos.IdTrabajador = Duenio.Value;
+            }
+
         var RespuestaApi = new ResponseAPI<int>();
         using var transaccion = await Contexto.Database.BeginTransactionAsync();
         try

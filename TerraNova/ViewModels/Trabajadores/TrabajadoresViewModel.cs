@@ -20,6 +20,8 @@ namespace TerraNova.ViewModels
             Autenticacion = autenticacion;
         }
 
+        public bool EsAdmin => Autenticacion.EsAdmin;
+
         public ObservableCollection<TrabajadorDTO> Trabajadores { get; } = new();
 
         [ObservableProperty] public partial string TextoBusqueda { get; set; } = string.Empty;

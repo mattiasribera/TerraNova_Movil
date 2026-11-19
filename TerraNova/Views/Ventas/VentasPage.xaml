@@ -11,7 +11,7 @@
 
     <Grid RowDefinitions="Auto,Auto,Auto,*">
         <Grid Style="{StaticResource Encabezado}" ColumnDefinitions="*,Auto">
-            <Label Text="{Binding Ventas.Count, StringFormat='{0} ventas registradas'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
+            <Label Text="{Binding Ventas.Count, StringFormat='{0} ventas'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
             <Button Grid.Column="1" Text="Registrar venta" Style="{StaticResource BotonPrimario}" Command="{Binding NuevaCommand}"
                     ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Agregar}, Color=White, Size=16}"/>
         </Grid>
@@ -101,6 +101,7 @@
                                 <Button Grid.Column="1" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
                                         Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:VentasViewModel}}, x:DataType=vm:VentasViewModel}" CommandParameter="{Binding .}"/>
                                 <Button Grid.Column="2" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Anular venta"
+                                        IsVisible="{Binding EsAdmin, Source={RelativeSource AncestorType={x:Type vm:VentasViewModel}}, x:DataType=vm:VentasViewModel}"
                                         Command="{Binding EliminarCommand, Source={RelativeSource AncestorType={x:Type vm:VentasViewModel}}, x:DataType=vm:VentasViewModel}" CommandParameter="{Binding .}"/>
                             </Grid>
                         </Border>

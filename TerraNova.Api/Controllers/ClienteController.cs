@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using TerraNova.Api.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Models;
 using TerraNova.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,7 @@ namespace TerraNova.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ClienteController : ControllerBase
     {
         private readonly TerraNovaDbContext Contexto;
@@ -95,6 +98,8 @@ namespace TerraNova.Api.Controllers
         [Route("Eliminar/{Cod}")]
         public async Task<IActionResult> Eliminar(int Cod)
         {
+            if (!User.EsAdmin()) return this.Prohibido("Solo un administrador puede eliminar clientes");
+
             var RespuestaApi = new ResponseAPI<int>();
             try
             {

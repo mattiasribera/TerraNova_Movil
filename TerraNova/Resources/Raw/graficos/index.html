@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--
+    Pagina local que dibuja UN grafico de ECharts dentro de la app (HybridWebView).
+    C# llama a dibujar({...opciones de ECharts...}) y esta pagina lo muestra.
+    echarts.min.js va empaquetado en la app: no necesita internet.
+-->
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; }
+        #grafico { width: 100%; height: 100%; }
+    </style>
+    <!-- Puente de MAUI: permite enviar mensajes a C# -->
+    <script src="_hwv/HybridWebView.js"></script>
+    <script src="echarts.min.js"></script>
+</head>
+<body>
+    <div id="grafico"></div>
+    <script>
+        const grafico = echarts.init(document.getElementById('grafico'), null, { renderer: 'canvas' });
+
+        // Estilo base comun a todos los graficos de TerraNova
+        const base = {
+            textStyle: { fontFamily: 'Segoe UI, Roboto, sans-serif', color: '#1F2421' },
+            color: ['#1E5631', '#0D6EFD', '#B8860B', '#DC3545', '#6F42C1', '#20C997', '#FD7E14'],
+            animationDuration: 900
+        };
+
+        // Llamada desde C#: GraficoECharts.Dibujar()
+        function dibujar(opciones) {
+            grafico.clear();
+            grafico.setOption(Object.assign({}, base, opciones), true);
+            return 'ok';
+        }
+
+        window.addEventListener('resize', () => grafico.resize());
+
+        // Avisar a C# que la pagina ya cargo y puede recibir datos
+        function avisarListo() {
+            if (window.HybridWebView && window.HybridWebView.SendRawMessage) {
+                window.HybridWebView.SendRawMessage('listo');
+            } else {
+                setTimeout(avisarListo, 100);
+            }
+        }
+        avisarListo();
+    </script>
+</body>
+</html>

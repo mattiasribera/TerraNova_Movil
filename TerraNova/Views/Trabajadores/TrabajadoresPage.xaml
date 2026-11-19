@@ -13,7 +13,7 @@
     <Grid RowDefinitions="Auto,Auto,*">
         <Grid Style="{StaticResource Encabezado}" ColumnDefinitions="*,Auto">
             <Label Text="{Binding Trabajadores.Count, StringFormat='{0} trabajadores'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
-            <Button Grid.Column="1" Text="Nuevo trabajador" Style="{StaticResource BotonPrimario}" Command="{Binding NuevoCommand}"
+            <Button Grid.Column="1" Text="Nuevo trabajador" Style="{StaticResource BotonPrimario}" Command="{Binding NuevoCommand}" IsVisible="{Binding EsAdmin}"
                     ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Agregar}, Color=White, Size=16}"/>
         </Grid>
 

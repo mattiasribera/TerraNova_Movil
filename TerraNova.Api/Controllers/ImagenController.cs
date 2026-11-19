@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Services;
 using TerraNova.Shared;
@@ -6,6 +8,7 @@ namespace TerraNova.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ImagenController : ControllerBase
     {
         private readonly ServicioImagenes Imagenes;

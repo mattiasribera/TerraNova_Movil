@@ -15,10 +15,10 @@ namespace TerraNova.Services
 
         // Validaciones de duplicados (devuelven true/false directo, sin ResponseAPI)
         public Task<bool> ExisteCi(string Ci, int IdExcluir) =>
-            Http.GetFromJsonAsync<bool>($"api/Cliente/ExisteCi/{Uri.EscapeDataString(Ci)}/{IdExcluir}");
+            ObtenerDirecto<bool>($"api/Cliente/ExisteCi/{Uri.EscapeDataString(Ci)}/{IdExcluir}");
         public Task<bool> ExisteTelefono(string Telefono, int IdExcluir) =>
-            Http.GetFromJsonAsync<bool>($"api/Cliente/ExisteTelefono/{Uri.EscapeDataString(Telefono)}/{IdExcluir}");
+            ObtenerDirecto<bool>($"api/Cliente/ExisteTelefono/{Uri.EscapeDataString(Telefono)}/{IdExcluir}");
         public Task<bool> ExisteEmail(string Email, int IdExcluir) =>
-            Http.GetFromJsonAsync<bool>($"api/Cliente/ExisteEmail/{Uri.EscapeDataString(Email)}/{IdExcluir}");
+            ObtenerDirecto<bool>($"api/Cliente/ExisteEmail/{Uri.EscapeDataString(Email)}/{IdExcluir}");
     }
 }

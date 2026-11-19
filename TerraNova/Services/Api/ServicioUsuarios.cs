@@ -13,6 +13,6 @@ namespace TerraNova.Services
         public Task<int> Modificar(UsuarioDTO U) => Actualizar($"api/Usuario/Modificar/{U.Id}", U);
         public Task<int> Eliminar(int Cod) => Borrar($"api/Usuario/Eliminar/{Cod}");
         public Task<bool> ExisteNombreUsuario(string Nombre, int IdExcluir) =>
-            Http.GetFromJsonAsync<bool>($"api/Usuario/ExisteNombreUsuario/{Uri.EscapeDataString(Nombre)}/{IdExcluir}");
+            ObtenerDirecto<bool>($"api/Usuario/ExisteNombreUsuario/{Uri.EscapeDataString(Nombre)}/{IdExcluir}");
     }
 }

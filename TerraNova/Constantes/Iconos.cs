@@ -29,6 +29,11 @@ namespace TerraNova.Constantes
         public const string Galeria = "";       // image
         public const string Cerrar = "";        // dismiss
         public const string AgendarVisita = ""; // calendar_add
+        public const string Ver = "";           // eye
+        public const string Ocultar = "";       // eye_off
+        public const string Ruta = "";          // location (como llegar)
+        public const string Filtro = "";        // filter
+        public const string SinConexion = "";   // dismiss
 
         // Datos
         public const string Telefono = "";      // call

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Models;
 using TerraNova.Api.Services;
@@ -8,6 +9,7 @@ namespace TerraNova.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TrabajadorController : ControllerBase
     {
         private readonly TerraNovaDbContext Contexto;
@@ -104,6 +106,8 @@ namespace TerraNova.Api.Controllers
         [Route("Guardar")]
         public async Task<IActionResult> Guardar(TrabajadorDTO ObjTrabajador)
         {
+            if (!User.EsAdmin()) return this.Prohibido("Solo un administrador puede registrar trabajadores");
+
             var RespuestaAPI = new ResponseAPI<int>();
             try
             {
@@ -149,6 +153,8 @@ namespace TerraNova.Api.Controllers
         [Route("Eliminar/{Cod}")]
         public async Task<IActionResult> Eliminar(int Cod)
         {
+            if (!User.EsAdmin()) return this.Prohibido("Solo un administrador puede dar de baja trabajadores");
+
             // Baja lógica (igual que en la versión anterior en memoria):
             // se marca Activo = false en vez de borrar físicamente el registro,
             // porque puede tener Propiedades, Ventas o Visitas asociadas.
@@ -222,6 +228,19 @@ namespace TerraNova.Api.Controllers
         [Route("Modificar/{Cod}")]
         public async Task<IActionResult> Modificar(TrabajadorDTO NuevosDatos, int Cod)
         {
+            if (!User.EsAdmin())
+            {
+                if (User.IdTrabajador() != Cod) return this.Prohibido("Solo puede modificar su propio perfil");
+                // Un agente no puede cambiarse la comision, el cargo ni el estado
+                var Actual = await Contexto.Trabajadores.AsNoTracking().FirstOrDefaultAsync(t => t.Id == Cod);
+                if (Actual != null)
+                {
+                    NuevosDatos.PorcentajeComision = Actual.PorcentajeComision;
+                    NuevosDatos.Cargo = Actual.Cargo;
+                    NuevosDatos.Activo = Actual.Activo;
+                }
+            }
+
             var RespuestaApi = new ResponseAPI<int>();
             try
             {

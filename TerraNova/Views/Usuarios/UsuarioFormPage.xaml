@@ -4,6 +4,7 @@
                   xmlns:views="clr-namespace:TerraNova.Views"
                   xmlns:vm="clr-namespace:TerraNova.ViewModels"
                   xmlns:c="clr-namespace:TerraNova.Constantes"
+             xmlns:controls="clr-namespace:TerraNova.Controls"
                   xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
                   x:Class="TerraNova.Views.UsuarioFormPage"
                   x:DataType="vm:UsuarioFormViewModel"
@@ -28,7 +29,7 @@
                     <!-- La contraseña solo se pide al registrar (la API no la cambia al modificar) -->
                     <VerticalStackLayout IsVisible="{Binding EsNuevo}">
                         <Label Text="Contraseña" Style="{StaticResource Etiqueta}"/>
-                        <Entry Text="{Binding Contrasena}" IsPassword="True" Placeholder="Mínimo 6 caracteres"/>
+                        <controls:CampoContrasena Texto="{Binding Contrasena}" Placeholder="Mínimo 6 caracteres"/>
                         <Label Text="Se guarda cifrada con BCrypt en la base de datos." Style="{StaticResource Secundario}" Margin="0,4,0,0"/>
                     </VerticalStackLayout>
                 </VerticalStackLayout>

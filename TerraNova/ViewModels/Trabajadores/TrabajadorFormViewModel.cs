@@ -12,12 +12,18 @@ namespace TerraNova.ViewModels
         private readonly ServicioTrabajadores Servicio;
         private readonly ServicioImagenes Imagenes;
 
-        public TrabajadorFormViewModel(ServicioTrabajadores servicio, ServicioImagenes imagenes)
+        private readonly ServicioAutenticacion Autenticacion;
+
+        public TrabajadorFormViewModel(ServicioTrabajadores servicio, ServicioImagenes imagenes, ServicioAutenticacion autenticacion)
         {
             Servicio = servicio;
             Imagenes = imagenes;
+            Autenticacion = autenticacion;
             Titulo = "Registrar trabajador";
         }
+
+        // Un agente edita su perfil pero no su comision, cargo ni estado (la API tambien lo protege)
+        public bool EsAdmin => Autenticacion.EsAdmin;
 
         public List<string> Cargos { get; } = new() { "Agente", "Administrador", "Recepcionista" };
 

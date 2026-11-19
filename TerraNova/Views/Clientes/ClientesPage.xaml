@@ -66,6 +66,7 @@
                                 <Button Grid.Column="3" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
                                         Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:ClientesViewModel}}, x:DataType=vm:ClientesViewModel}" CommandParameter="{Binding .}"/>
                                 <Button Grid.Column="4" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Eliminar"
+                                        IsVisible="{Binding EsAdmin, Source={RelativeSource AncestorType={x:Type vm:ClientesViewModel}}, x:DataType=vm:ClientesViewModel}"
                                         Command="{Binding EliminarCommand, Source={RelativeSource AncestorType={x:Type vm:ClientesViewModel}}, x:DataType=vm:ClientesViewModel}" CommandParameter="{Binding .}"/>
                             </Grid>
                         </Border>

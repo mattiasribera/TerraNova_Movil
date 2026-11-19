@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:TerraNova.ViewModels"
              xmlns:c="clr-namespace:TerraNova.Constantes"
+             xmlns:controls="clr-namespace:TerraNova.Controls"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="TerraNova.Views.LoginPage"
              x:DataType="vm:LoginViewModel"
@@ -36,8 +37,9 @@
                     <Entry Text="{Binding NombreUsuario}" Placeholder="Nombre de usuario"/>
 
                     <Label Text="Contraseña" Style="{StaticResource Etiqueta}"/>
-                    <Entry Text="{Binding Contrasena}" IsPassword="True" Placeholder="Contraseña"
-                           ReturnCommand="{Binding IniciarSesionCommand}"/>
+                    <!-- Campo con "ojo" para ver lo que se escribe (Controls/CampoContrasena.cs) -->
+                    <controls:CampoContrasena Texto="{Binding Contrasena}" Placeholder="Contraseña"
+                                              ComandoEnter="{Binding IniciarSesionCommand}"/>
 
                     <Label Text="{Binding MensajeError}" TextColor="{StaticResource Rojo}" Margin="0,6,0,0"
                            IsVisible="{Binding MensajeError, Converter={toolkit:IsStringNotNullOrEmptyConverter}}"/>

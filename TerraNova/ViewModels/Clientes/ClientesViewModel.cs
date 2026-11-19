@@ -13,10 +13,16 @@ namespace TerraNova.ViewModels
         private readonly ServicioClientes Servicio;
         private List<ClienteDTO> Todos = new();
 
-        public ClientesViewModel(ServicioClientes servicio)
+        private readonly ServicioAutenticacion Autenticacion;
+
+        public ClientesViewModel(ServicioClientes servicio, ServicioAutenticacion autenticacion)
         {
             Servicio = servicio;
+            Autenticacion = autenticacion;
         }
+
+        // Solo el Admin puede eliminar clientes (la API tambien lo valida)
+        public bool EsAdmin => Autenticacion.EsAdmin;
 
         public ObservableCollection<ClienteDTO> Clientes { get; } = new();
 

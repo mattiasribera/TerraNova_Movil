@@ -87,11 +87,11 @@
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
                         <VerticalStackLayout>
                             <Label Text="Cargo" Style="{StaticResource Etiqueta}"/>
-                            <Picker ItemsSource="{Binding Cargos}" SelectedItem="{Binding Trabajador.Cargo}"/>
+                            <Picker ItemsSource="{Binding Cargos}" SelectedItem="{Binding Trabajador.Cargo}" IsEnabled="{Binding EsAdmin}"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="1">
                             <Label Text="Comisión (%)" Style="{StaticResource Etiqueta}"/>
-                            <Entry Text="{Binding Comision}" Keyboard="Numeric" Placeholder="Ej: 3,5">
+                            <Entry Text="{Binding Comision}" Keyboard="Numeric" Placeholder="Ej: 3,5" IsEnabled="{Binding EsAdmin}">
                                 <Entry.Behaviors>
                                     <toolkit:TextValidationBehavior InvalidStyle="{StaticResource Invalido}" ValidStyle="{StaticResource Valido}"
                                                                     Flags="ValidateOnValueChanged" RegexPattern="{x:Static h:Numeros.PatronDecimal}"/>
@@ -104,7 +104,7 @@
                         </VerticalStackLayout>
                     </Grid>
                     <HorizontalStackLayout Margin="0,10,0,0">
-                        <CheckBox IsChecked="{Binding Trabajador.Activo}"/>
+                        <CheckBox IsChecked="{Binding Trabajador.Activo}" IsEnabled="{Binding EsAdmin}"/>
                         <Label Text="Trabajador activo" VerticalOptions="Center" TextColor="{StaticResource Texto}"/>
                     </HorizontalStackLayout>
                 </VerticalStackLayout>

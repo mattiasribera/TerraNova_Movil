@@ -34,7 +34,9 @@ namespace TerraNova.ViewModels
             {
                 Cargando = true;
                 OnPropertyChanged(nameof(Saludo));
-                Datos = await Servicio.ObtenerDashboardAsync();
+                // Un agente ve sus propias estadisticas; el Admin, las de toda la empresa
+                var IdAgente = Autenticacion.EsAdmin ? null : Autenticacion.UsuarioActual?.IdTrabajador;
+                Datos = await Servicio.ObtenerDashboardAsync(IdAgente);
             }
             catch (Exception Ex)
             {
@@ -52,5 +54,8 @@ namespace TerraNova.ViewModels
 
         [RelayCommand]
         private Task VerPropiedad(PropiedadDTO P) => Shell.Current.GoToAsync(Rutas.ConId(Rutas.DetallePropiedad, P.Id));
+
+        [RelayCommand]
+        private Task VerVisita(VisitaDTO V) => Shell.Current.GoToAsync(Rutas.ConId(Rutas.VisitaForm, V.Id));
     }
 }

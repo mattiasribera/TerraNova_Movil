@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Models;
 using TerraNova.Api.Services;
@@ -8,6 +9,7 @@ namespace TerraNova.Api.Controllers;
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PropiedadController : ControllerBase
     {
         private readonly TerraNovaDbContext Contexto;
@@ -174,6 +176,12 @@ namespace TerraNova.Api.Controllers;
         [Route("Guardar")]
     public async Task<IActionResult> Guardar(PropiedadDTO ObjPropiedad)
     {
+            if (!User.EsAdmin())
+            {
+                if (User.IdTrabajador() is not int Mio) return this.Prohibido("Su usuario no tiene un trabajador vinculado");
+                ObjPropiedad.IdTrabajador = Mio; // un agente siempre registra a su nombre
+            }
+
         var RespuestaAPI = new ResponseAPI<int>();
         try
         {
@@ -225,6 +233,13 @@ namespace TerraNova.Api.Controllers;
     [Route("Modificar/{Cod}")]
     public async Task<IActionResult> Modificar(PropiedadDTO NuevosDatos, int Cod)
     {
+            if (!User.EsAdmin())
+            {
+                var Duenio = await Contexto.Propiedades.Where(x => x.Id == Cod).Select(x => (int?)x.IdTrabajador).FirstOrDefaultAsync();
+                if (Duenio == null || !User.PuedeGestionar(Duenio.Value)) return this.Prohibido("Solo puede modificar las propiedades que tiene asignadas");
+                NuevosDatos.IdTrabajador = Duenio.Value; // un agente no puede reasignarla
+            }
+
         var RespuestaApi = new ResponseAPI<int>();
         try
         {
@@ -276,6 +291,8 @@ namespace TerraNova.Api.Controllers;
     [Route("Eliminar/{Cod}")]
     public async Task<IActionResult> Eliminar(int Cod)
     {
+            if (!User.EsAdmin()) return this.Prohibido("Solo un administrador puede eliminar propiedades");
+
         var RespuestaApi = new ResponseAPI<int>();
         try
         {

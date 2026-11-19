@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Models;
 using TerraNova.Api.Services;
@@ -9,6 +11,7 @@ namespace TerraNova.Api.Controllers
     // POST api/Demo/Generar   (desde Swagger: http://localhost:5150/swagger)
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class DemoController : ControllerBase
     {
         private readonly TerraNovaDbContext Contexto;

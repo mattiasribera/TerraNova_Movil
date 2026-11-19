@@ -13,10 +13,17 @@ namespace TerraNova.ViewModels
         private readonly ServicioVentas Servicio;
         private List<VentaDTO> Todas = new();
 
-        public VentasViewModel(ServicioVentas servicio)
+        private readonly ServicioAutenticacion Autenticacion;
+
+        public VentasViewModel(ServicioVentas servicio, ServicioAutenticacion autenticacion)
         {
             Servicio = servicio;
+            Autenticacion = autenticacion;
         }
+
+        // Solo el Admin puede anular ventas (la API tambien lo valida). Un agente solo ve las suyas.
+        public bool EsAdmin => Autenticacion.EsAdmin;
+        public string Subtitulo => EsAdmin ? "ventas registradas" : "ventas tuyas";
 
         public ObservableCollection<VentaDTO> Ventas { get; } = new();
 

@@ -23,6 +23,16 @@ namespace TerraNova
             Routing.RegisterRoute(Rutas.VisitaForm, typeof(VisitaFormPage));
 
             ActualizarMenu();
+
+            // Si la API responde 401 (token vencido o invalido) se cierra la sesion y se vuelve al login
+            ServicioBase.SesionExpirada += async () =>
+            {
+                if (!Autenticacion.EstaLogueado) return;
+                Autenticacion.CerrarSesion();
+                ActualizarMenu();
+                await GoToAsync(Rutas.Login);
+                await Dialogos.Aviso("Su sesión expiró. Vuelva a iniciar sesión.");
+            };
         }
 
         // Muestra el usuario conectado y oculta "Usuarios" si no es Admin (igual que MainLayout.razor)
