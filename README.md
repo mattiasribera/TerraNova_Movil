@@ -109,5 +109,7 @@ archivo en `TerraNova.Api/wwwroot/imagenes/`. En la base de datos solo queda la 
 
 ## 6. Documentación
 
+- [`docs/GUIA_ESTUDIO.md`](docs/GUIA_ESTUDIO.md) — guía de estudio: arquitectura, recorridos paso a paso, preguntas difíciles y guión de demo
+- [`docs/MAPAS.md`](docs/MAPAS.md) — cómo funcionan y cómo se arman los mapas (Mapsui)
 - [`docs/GLOSARIO.md`](docs/GLOSARIO.md) — 20 preguntas y respuestas para la presentación
 - [`TerraNova/INVESTIGACION.md`](TerraNova/INVESTIGACION.md) — investigación de CommunityToolkit.Maui
