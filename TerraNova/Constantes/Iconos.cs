@@ -16,7 +16,6 @@ namespace TerraNova.Constantes
         public const string Ventas = "";        // money
         public const string Visitas = "";       // calendar_ltr
         public const string Usuarios = "";      // lock_closed
-        public const string Practica = "";      // notepad
         public const string Salir = "";         // sign_out
 
         // Acciones

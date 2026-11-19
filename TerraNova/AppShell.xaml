@@ -7,7 +7,6 @@
     x:Class="TerraNova.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:TerraNova"
     xmlns:views="clr-namespace:TerraNova.Views"
     xmlns:c="clr-namespace:TerraNova.Constantes"
     Title="TerraNova"
@@ -99,10 +98,6 @@
     </FlyoutItem>
     <FlyoutItem x:Name="ItemUsuarios" Title="Usuarios" Route="Usuarios" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Usuarios}, Color=White}">
         <ShellContent Title="Usuarios" ContentTemplate="{DataTemplate views:UsuariosPage}"/>
-    </FlyoutItem>
-    <!-- Practica en clase (vector de propiedades + CommunityToolkit) -->
-    <FlyoutItem Title="Práctica" Route="Practica" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Practica}, Color=White}">
-        <ShellContent Title="Práctica: registrar propiedad" ContentTemplate="{DataTemplate local:MainPage}"/>
     </FlyoutItem>
 
 </Shell>
