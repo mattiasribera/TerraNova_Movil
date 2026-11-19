@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:models="clr-namespace:TerraNova.Models"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                  x:Class="TerraNova.Views.UsuariosPage"
+                  x:DataType="vm:UsuariosViewModel"
+                  Title="Usuarios">
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Style="{StaticResource Encabezado}" ColumnDefinitions="*,Auto">
+            <Label Text="{Binding Usuarios.Count, StringFormat='{0} usuarios del sistema'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
+            <Button Grid.Column="1" Text="Nuevo usuario" Style="{StaticResource BotonPrimario}" Command="{Binding NuevoCommand}"
+                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Agregar}, Color=White, Size=16}"/>
+        </Grid>
+
+        <RefreshView Grid.Row="1" Command="{Binding CargarCommand}" IsRefreshing="{Binding Cargando}">
+            <CollectionView ItemsSource="{Binding Usuarios}" SelectionMode="None" Margin="{OnIdiom Desktop='24,8,24,0', Default='12,8,12,0'}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="{OnIdiom Desktop=2, Default=1}" VerticalItemSpacing="12" HorizontalItemSpacing="12"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="20" Color="Transparent"/>
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:UsuarioFila">
+                        <Border Style="{StaticResource Tarjeta}">
+                            <Grid ColumnDefinitions="46,*,Auto,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" Stroke="Transparent"
+                                        BackgroundColor="{StaticResource VerdeClaro}" VerticalOptions="Start">
+                                    <Label Style="{StaticResource Icono}" Text="{x:Static c:Iconos.Usuarios}" FontSize="20" HorizontalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                    <Label Text="{Binding Usuario.NombreUsuario}" Style="{StaticResource TituloTarjeta}"/>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Trabajadores}"/>
+                                                <Span Text="{Binding Trabajador, StringFormat='  {0}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Border Style="{StaticResource Badge}" BackgroundColor="{Binding Usuario.Rol, Converter={StaticResource EstadoAColor}}">
+                                            <Label Text="{Binding Usuario.Rol}" Style="{StaticResource TextoBadge}"/>
+                                        </Border>
+                                        <Border Style="{StaticResource Badge}" BackgroundColor="#198754" IsVisible="{Binding Usuario.Activo}">
+                                            <Label Text="Activo" Style="{StaticResource TextoBadge}"/>
+                                        </Border>
+                                        <Border Style="{StaticResource Badge}" BackgroundColor="Gray" IsVisible="{Binding Usuario.Activo, Converter={toolkit:InvertedBoolConverter}}">
+                                            <Label Text="Inactivo" Style="{StaticResource TextoBadge}"/>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="2" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
+                                        Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:UsuariosViewModel}}, x:DataType=vm:UsuariosViewModel}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="3" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Desactivar"
+                                        IsVisible="{Binding Usuario.Activo}"
+                                        Command="{Binding EliminarCommand, Source={RelativeSource AncestorType={x:Type vm:UsuariosViewModel}}, x:DataType=vm:UsuariosViewModel}" CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</views:PaginaBase>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  x:Class="TerraNova.Views.VisitasPage"
+                  x:DataType="vm:VisitasViewModel"
+                  Title="Visitas">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Grid Style="{StaticResource Encabezado}" ColumnDefinitions="*,Auto">
+            <Label Text="{Binding Visitas.Count, StringFormat='{0} visitas'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
+            <Button Grid.Column="1" Text="Programar visita" Style="{StaticResource BotonPrimario}" Command="{Binding NuevaCommand}"
+                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Agregar}, Color=White, Size=16}"/>
+        </Grid>
+
+        <!-- Filtros: texto, estado y rango de fechas (igual que la web) -->
+        <Grid Grid.Row="1" Padding="{OnIdiom Desktop='24,4,24,10', Default='12,4,12,8'}" RowSpacing="6" ColumnSpacing="8"
+              ColumnDefinitions="{OnIdiom Desktop='2*,*,Auto,*,*,Auto', Default='Auto,*,*'}"
+              RowDefinitions="{OnIdiom Desktop='Auto', Default='Auto,Auto,Auto'}">
+            <SearchBar Grid.ColumnSpan="{OnIdiom Desktop=1, Default=3}" Text="{Binding TextoBusqueda}" Placeholder="Buscar por cliente, propiedad o comentario"/>
+            <Grid Grid.Row="{OnIdiom Desktop=0, Default=1}" Grid.Column="{OnIdiom Desktop=1, Default=0}" Grid.ColumnSpan="{OnIdiom Desktop=1, Default=2}"
+                  ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                <Picker ItemsSource="{Binding Estados}" SelectedItem="{Binding EstadoFiltro}"/>
+                <Button Grid.Column="1" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Limpiar}" VerticalOptions="Center"
+                        ToolTipProperties.Text="Limpiar filtros" Command="{Binding LimpiarFiltrosCommand}" IsVisible="{OnIdiom Desktop=False, Default=True}"/>
+            </Grid>
+            <HorizontalStackLayout Grid.Row="{OnIdiom Desktop=0, Default=2}" Grid.Column="{OnIdiom Desktop=2, Default=0}" VerticalOptions="Center">
+                <CheckBox IsChecked="{Binding FiltrarFechas}"/>
+                <Label Text="Fechas" VerticalOptions="Center" TextColor="{StaticResource Texto}"/>
+            </HorizontalStackLayout>
+            <DatePicker Grid.Row="{OnIdiom Desktop=0, Default=2}" Grid.Column="{OnIdiom Desktop=3, Default=1}"
+                        Date="{Binding FechaDesde}" Format="dd/MM/yyyy" IsEnabled="{Binding FiltrarFechas}"/>
+            <DatePicker Grid.Row="{OnIdiom Desktop=0, Default=2}" Grid.Column="{OnIdiom Desktop=4, Default=2}"
+                        Date="{Binding FechaHasta}" Format="dd/MM/yyyy" IsEnabled="{Binding FiltrarFechas}"/>
+            <Button Grid.Column="5" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Limpiar}" VerticalOptions="Center"
+                    ToolTipProperties.Text="Limpiar filtros" Command="{Binding LimpiarFiltrosCommand}" IsVisible="{OnIdiom Desktop=True, Default=False}"/>
+        </Grid>
+
+        <RefreshView Grid.Row="2" Command="{Binding CargarCommand}" IsRefreshing="{Binding Cargando}">
+            <CollectionView ItemsSource="{Binding Visitas}" SelectionMode="None" Margin="{OnIdiom Desktop='24,0', Default='12,0'}">
+                <CollectionView.EmptyView>
+                    <Label Text="No hay visitas que coincidan con los filtros" HorizontalOptions="Center" Margin="0,40" Style="{StaticResource Secundario}"/>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="{OnIdiom Desktop=2, Default=1}" VerticalItemSpacing="12" HorizontalItemSpacing="12"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="20" Color="Transparent"/>
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:VisitaDTO">
+                        <Border Style="{StaticResource Tarjeta}">
+                            <Grid ColumnDefinitions="58,*,Auto,Auto" ColumnSpacing="12">
+                                <!-- "Hoja de calendario" con dia y mes -->
+                                <Border StrokeShape="RoundRectangle 10" Stroke="Transparent" BackgroundColor="{StaticResource VerdeClaro}"
+                                        Padding="0,6" VerticalOptions="Start">
+                                    <VerticalStackLayout>
+                                        <Label Text="{Binding FechaVisita, StringFormat='{0:dd}'}" FontSize="22" FontFamily="OpenSansSemibold"
+                                               TextColor="{StaticResource Verde}" HorizontalOptions="Center"/>
+                                        <Label Text="{Binding FechaVisita, StringFormat='{0:MMM}'}" FontSize="12" TextColor="{StaticResource Verde}"
+                                               HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                    <Label Text="{Binding IdPropiedadNavigation.Titulo}" Style="{StaticResource TituloTarjeta}"/>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Reloj}"/>
+                                                <Span Text="{Binding FechaVisita, StringFormat='  {0:HH:mm}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Persona}"/>
+                                                <Span Text="  Cliente: "/>
+                                                <Span Text="{Binding IdClienteNavigation.NombreCompleto}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Trabajadores}"/>
+                                                <Span Text="  Agente: "/>
+                                                <Span Text="{Binding IdTrabajadorNavigation.NombreCompleto}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Text="{Binding Comentarios}" Style="{StaticResource Secundario}" FontAttributes="Italic" LineBreakMode="TailTruncation"/>
+                                    <Border Style="{StaticResource Badge}" BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}" Margin="0,4,0,0">
+                                        <Label Text="{Binding Estado}" Style="{StaticResource TextoBadge}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="2" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
+                                        Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:VisitasViewModel}}, x:DataType=vm:VisitasViewModel}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="3" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Eliminar"
+                                        Command="{Binding EliminarCommand, Source={RelativeSource AncestorType={x:Type vm:VisitasViewModel}}, x:DataType=vm:VisitasViewModel}" CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</views:PaginaBase>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:models="clr-namespace:TerraNova.Models"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  x:Class="TerraNova.Views.DashboardPage"
+                  x:DataType="vm:DashboardViewModel"
+                  Title="Inicio">
+
+    <RefreshView Command="{Binding CargarCommand}" IsRefreshing="{Binding Cargando}">
+        <ScrollView>
+            <VerticalStackLayout Padding="{OnIdiom Desktop='28,20', Default='14'}" Spacing="16">
+                <VerticalStackLayout>
+                    <Label Text="{Binding Saludo}" FontSize="26" FontFamily="OpenSansSemibold" TextColor="{StaticResource Texto}"/>
+                    <Label Text="Resumen general de TerraNova Bienes Raíces" Style="{StaticResource Secundario}"/>
+                </VerticalStackLayout>
+
+                <!-- Contadores: 4 en fila en Windows, 2x2 en el celular -->
+                <FlexLayout Wrap="Wrap" Margin="-6,0">
+                    <Border Style="{StaticResource Tarjeta}" Margin="6" FlexLayout.Basis="{OnIdiom Desktop='22%', Default='45%'}" FlexLayout.Grow="1">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Propiedades" Style="{StaticResource Secundario}"/>
+                                <Label Text="{Binding Datos.TotalPropiedades}" FontSize="30" FontFamily="OpenSansSemibold" TextColor="{StaticResource Verde}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Style="{StaticResource Icono}" FontSize="30" Text="{x:Static c:Iconos.Propiedades}" TextColor="{StaticResource Verde}"/>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource Tarjeta}" Margin="6" FlexLayout.Basis="{OnIdiom Desktop='22%', Default='45%'}" FlexLayout.Grow="1">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Clientes" Style="{StaticResource Secundario}"/>
+                                <Label Text="{Binding Datos.TotalClientes}" FontSize="30" FontFamily="OpenSansSemibold" TextColor="{StaticResource Azul}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Style="{StaticResource Icono}" FontSize="30" Text="{x:Static c:Iconos.Clientes}" TextColor="{StaticResource Azul}"/>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource Tarjeta}" Margin="6" FlexLayout.Basis="{OnIdiom Desktop='22%', Default='45%'}" FlexLayout.Grow="1">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Ventas" Style="{StaticResource Secundario}"/>
+                                <Label Text="{Binding Datos.TotalVentas}" FontSize="30" FontFamily="OpenSansSemibold" TextColor="{StaticResource Rojo}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Style="{StaticResource Icono}" FontSize="30" Text="{x:Static c:Iconos.Ventas}" TextColor="{StaticResource Rojo}"/>
+                        </Grid>
+                    </Border>
+                    <Border Style="{StaticResource Tarjeta}" Margin="6" FlexLayout.Basis="{OnIdiom Desktop='22%', Default='45%'}" FlexLayout.Grow="1">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Trabajadores" Style="{StaticResource Secundario}"/>
+                                <Label Text="{Binding Datos.TotalTrabajadores}" FontSize="30" FontFamily="OpenSansSemibold" TextColor="{StaticResource Dorado}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Style="{StaticResource Icono}" FontSize="30" Text="{x:Static c:Iconos.Trabajadores}" TextColor="{StaticResource Dorado}"/>
+                        </Grid>
+                    </Border>
+                </FlexLayout>
+
+                <!-- Accesos rapidos -->
+                <Label Text="Accesos rápidos" Style="{StaticResource TituloSeccion}"/>
+                <FlexLayout Wrap="Wrap">
+                    <Button Text="Nueva propiedad" Style="{StaticResource BotonSecundario}" Margin="0,0,8,8"
+                            Command="{Binding IrCommand}" CommandParameter="{x:Static c:Rutas.PropiedadForm}"
+                            ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Propiedades}, Color={StaticResource Verde}, Size=16}"/>
+                    <Button Text="Nuevo cliente" Style="{StaticResource BotonSecundario}" Margin="0,0,8,8"
+                            Command="{Binding IrCommand}" CommandParameter="{x:Static c:Rutas.ClienteForm}"
+                            ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Clientes}, Color={StaticResource Verde}, Size=16}"/>
+                    <Button Text="Registrar venta" Style="{StaticResource BotonSecundario}" Margin="0,0,8,8"
+                            Command="{Binding IrCommand}" CommandParameter="{x:Static c:Rutas.VentaForm}"
+                            ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Ventas}, Color={StaticResource Verde}, Size=16}"/>
+                    <Button Text="Programar visita" Style="{StaticResource BotonSecundario}" Margin="0,0,8,8"
+                            Command="{Binding IrCommand}" CommandParameter="{x:Static c:Rutas.VisitaForm}"
+                            ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Visitas}, Color={StaticResource Verde}, Size=16}"/>
+                    <Button Text="Nuevo trabajador" Style="{StaticResource BotonSecundario}" Margin="0,0,8,8"
+                            Command="{Binding IrCommand}" CommandParameter="{x:Static c:Rutas.TrabajadorForm}"
+                            ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Trabajadores}, Color={StaticResource Verde}, Size=16}"/>
+                </FlexLayout>
+
+                <!-- Ultimas propiedades + actividad: lado a lado en Windows -->
+                <Grid ColumnDefinitions="{OnIdiom Desktop='3*,2*', Default='*'}" RowDefinitions="{OnIdiom Desktop='Auto', Default='Auto,Auto'}"
+                      ColumnSpacing="20" RowSpacing="16">
+                    <VerticalStackLayout>
+                        <Label Text="Últimas propiedades" Style="{StaticResource TituloSeccion}"/>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Datos.UltimasPropiedades}" Spacing="8">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="dto:PropiedadDTO">
+                                    <Border Style="{StaticResource Tarjeta}" Padding="10">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding VerPropiedadCommand, Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, x:DataType=vm:DashboardViewModel}"
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+                                        <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="12">
+                                            <Border StrokeShape="RoundRectangle 8" Stroke="Transparent" BackgroundColor="{StaticResource Placeholder}" HeightRequest="52" WidthRequest="64">
+                                                <Grid>
+                                                    <Label Style="{StaticResource SinFoto}" FontSize="22" Text="{x:Static c:Iconos.Propiedades}"/>
+                                                    <Image Source="{Binding ImagenUrl, Converter={StaticResource FotoAImagen}}" Aspect="AspectFill"/>
+                                                </Grid>
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                                <Label Text="{Binding Titulo}" Style="{StaticResource TituloTarjeta}" FontSize="15"/>
+                                                <Label Text="{Binding Precio, StringFormat='$ {0:N0}'}" Style="{StaticResource Precio}" FontSize="14"/>
+                                            </VerticalStackLayout>
+                                            <Border Grid.Column="2" Style="{StaticResource Badge}"
+                                                    BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}">
+                                                <Label Text="{Binding Estado}" Style="{StaticResource TextoBadge}"/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="{OnIdiom Desktop=1, Default=0}" Grid.Row="{OnIdiom Desktop=0, Default=1}">
+                        <Label Text="Actividad reciente" Style="{StaticResource TituloSeccion}"/>
+                        <Border Style="{StaticResource Tarjeta}">
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Datos.ActividadReciente}" Spacing="14">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:ActividadReciente">
+                                        <Grid ColumnDefinitions="36,*" ColumnSpacing="10">
+                                            <Border WidthRequest="34" HeightRequest="34" StrokeShape="RoundRectangle 17" Stroke="Transparent"
+                                                    BackgroundColor="{StaticResource VerdeClaro}" VerticalOptions="Start">
+                                                <Label Style="{StaticResource Icono}" FontSize="16" Text="{Binding Icono}" HorizontalOptions="Center"/>
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1">
+                                                <Label Text="{Binding Descripcion}" TextColor="{StaticResource Texto}" FontSize="14"/>
+                                                <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy HH:mm}'}" Style="{StaticResource Secundario}" FontSize="12"/>
+                                            </VerticalStackLayout>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</views:PaginaBase>

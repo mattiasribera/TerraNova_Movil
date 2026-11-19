@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  x:Class="TerraNova.Views.VisitaFormPage"
+                  x:DataType="vm:VisitaFormViewModel"
+                  Title="{Binding Titulo}">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource Formulario}" Spacing="14">
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Participantes" Style="{StaticResource TituloSeccion}" Margin="0"/>
+
+                    <Label Text="Cliente" Style="{StaticResource Etiqueta}"/>
+                    <Picker ItemsSource="{Binding Clientes}" SelectedItem="{Binding Cliente}"
+                            ItemDisplayBinding="{Binding NombreCompleto, x:DataType=dto:ClienteDTO}"/>
+                    <Label Text="{Binding Cliente.Ci, StringFormat='CI {0}'}" Style="{StaticResource Secundario}"/>
+
+                    <Label Text="Propiedad" Style="{StaticResource Etiqueta}"/>
+                    <Picker ItemsSource="{Binding Propiedades}" SelectedItem="{Binding Propiedad}"
+                            ItemDisplayBinding="{Binding Titulo, x:DataType=dto:PropiedadDTO}"/>
+                    <Label Text="{Binding Propiedad.Zona}" Style="{StaticResource Secundario}"/>
+
+                    <Label Text="Agente que atiende" Style="{StaticResource Etiqueta}"/>
+                    <Picker ItemsSource="{Binding Trabajadores}" SelectedItem="{Binding Trabajador}" IsEnabled="{Binding EsAdmin}"
+                            ItemDisplayBinding="{Binding NombreCompleto, x:DataType=dto:TrabajadorDTO}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Fecha y estado" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Fecha" Style="{StaticResource Etiqueta}"/>
+                            <DatePicker Date="{Binding Fecha}" Format="dd/MM/yyyy"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Hora" Style="{StaticResource Etiqueta}"/>
+                            <TimePicker Time="{Binding Hora}" Format="HH:mm"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="Estado" Style="{StaticResource Etiqueta}"/>
+                            <Picker ItemsSource="{Binding Estados}" SelectedItem="{Binding Estado}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Label Text="Comentarios" Style="{StaticResource Etiqueta}"/>
+                    <Editor Text="{Binding Comentarios}" HeightRequest="80"/>
+                    <Label Style="{StaticResource Secundario}" Margin="0,8,0,0">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Correo}"/>
+                                <Span Text="  Al guardar se envía un correo de aviso al cliente, con copia al agente."/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </Border>
+
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="10" Margin="0,4,0,20">
+                <ActivityIndicator IsRunning="{Binding Ocupado}" IsVisible="{Binding Ocupado}"/>
+                <Button Text="Cancelar" Style="{StaticResource BotonSecundario}" Command="{Binding CancelarCommand}"/>
+                <Button Text="Guardar visita" Style="{StaticResource BotonPrimario}" Command="{Binding GuardarCommand}"
+                        ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Verificado}, Color=White, Size=16}"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</views:PaginaBase>

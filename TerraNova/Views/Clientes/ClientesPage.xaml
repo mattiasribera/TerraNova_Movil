@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  x:Class="TerraNova.Views.ClientesPage"
+                  x:DataType="vm:ClientesViewModel"
+                  Title="Clientes">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Grid Style="{StaticResource Encabezado}" ColumnDefinitions="*,Auto">
+            <Label Text="{Binding Clientes.Count, StringFormat='{0} clientes'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
+            <Button Grid.Column="1" Text="Nuevo cliente" Style="{StaticResource BotonPrimario}" Command="{Binding NuevoCommand}"
+                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Agregar}, Color=White, Size=16}"/>
+        </Grid>
+
+        <SearchBar Grid.Row="1" Text="{Binding TextoBusqueda}" Placeholder="Buscar por nombre, apellido o CI"
+                   Margin="{OnIdiom Desktop='24,4,24,10', Default='12,4,12,8'}"/>
+
+        <RefreshView Grid.Row="2" Command="{Binding CargarCommand}" IsRefreshing="{Binding Cargando}">
+            <CollectionView ItemsSource="{Binding Clientes}" SelectionMode="None" Margin="{OnIdiom Desktop='24,0', Default='12,0'}">
+                <CollectionView.EmptyView>
+                    <Label Text="No hay clientes" HorizontalOptions="Center" Margin="0,40" Style="{StaticResource Secundario}"/>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="{OnIdiom Desktop=2, Default=1}" VerticalItemSpacing="12" HorizontalItemSpacing="12"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="20" Color="Transparent"/>
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:ClienteDTO">
+                        <Border Style="{StaticResource Tarjeta}">
+                            <Grid ColumnDefinitions="46,*,Auto,Auto,Auto" ColumnSpacing="10">
+                                <Border WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" Stroke="Transparent"
+                                        BackgroundColor="{StaticResource VerdeClaro}" VerticalOptions="Start">
+                                    <Label Style="{StaticResource Icono}" Text="{x:Static c:Iconos.Persona}" FontSize="22" HorizontalOptions="Center"/>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                    <Label Text="{Binding NombreCompleto}" Style="{StaticResource TituloTarjeta}"/>
+                                    <Label Text="{Binding Ci, StringFormat='CI {0}'}" Style="{StaticResource Secundario}"/>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Telefono}"/>
+                                                <Span Text="{Binding Telefono, StringFormat='  {0}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Style="{StaticResource Secundario}" LineBreakMode="TailTruncation">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Correo}"/>
+                                                <Span Text="{Binding Email, StringFormat='  {0}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Border Style="{StaticResource Badge}" BackgroundColor="{StaticResource Verde}" Margin="0,4,0,0">
+                                        <Label Text="{Binding TipoCliente}" Style="{StaticResource TextoBadge}"/>
+                                    </Border>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="2" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Telefono}" ToolTipProperties.Text="Llamar"
+                                        Command="{Binding LlamarCommand, Source={RelativeSource AncestorType={x:Type vm:ClientesViewModel}}, x:DataType=vm:ClientesViewModel}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="3" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
+                                        Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:ClientesViewModel}}, x:DataType=vm:ClientesViewModel}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="4" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Eliminar"
+                                        Command="{Binding EliminarCommand, Source={RelativeSource AncestorType={x:Type vm:ClientesViewModel}}, x:DataType=vm:ClientesViewModel}" CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</views:PaginaBase>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  x:Class="TerraNova.Views.VentasPage"
+                  x:DataType="vm:VentasViewModel"
+                  Title="Ventas">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <Grid Style="{StaticResource Encabezado}" ColumnDefinitions="*,Auto">
+            <Label Text="{Binding Ventas.Count, StringFormat='{0} ventas registradas'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
+            <Button Grid.Column="1" Text="Registrar venta" Style="{StaticResource BotonPrimario}" Command="{Binding NuevaCommand}"
+                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Agregar}, Color=White, Size=16}"/>
+        </Grid>
+
+        <!-- Totales -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="12" Margin="{OnIdiom Desktop='24,4,24,8', Default='12,4,12,8'}">
+            <Border Style="{StaticResource Tarjeta}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="Total vendido" Style="{StaticResource Secundario}"/>
+                        <Label Text="{Binding TotalMontos, StringFormat='$ {0:N0}'}" FontSize="22" FontFamily="OpenSansSemibold" TextColor="{StaticResource Verde}"/>
+                    </VerticalStackLayout>
+                    <Label Grid.Column="1" Style="{StaticResource Icono}" FontSize="28" Text="{x:Static c:Iconos.Ventas}"/>
+                </Grid>
+            </Border>
+            <Border Grid.Column="1" Style="{StaticResource Tarjeta}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout>
+                        <Label Text="Comisiones generadas" Style="{StaticResource Secundario}"/>
+                        <Label Text="{Binding TotalComisiones, StringFormat='$ {0:N2}'}" FontSize="22" FontFamily="OpenSansSemibold" TextColor="{StaticResource Dorado}"/>
+                    </VerticalStackLayout>
+                    <Label Grid.Column="1" Style="{StaticResource Icono}" FontSize="28" Text="{x:Static c:Iconos.Comision}" TextColor="{StaticResource Dorado}"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <SearchBar Grid.Row="2" Text="{Binding TextoBusqueda}" Placeholder="Buscar por cliente, propiedad o agente"
+                   Margin="{OnIdiom Desktop='24,0,24,10', Default='12,0,12,8'}"/>
+
+        <RefreshView Grid.Row="3" Command="{Binding CargarCommand}" IsRefreshing="{Binding Cargando}">
+            <CollectionView ItemsSource="{Binding Ventas}" SelectionMode="None" Margin="{OnIdiom Desktop='24,0', Default='12,0'}">
+                <CollectionView.EmptyView>
+                    <Label Text="No hay ventas" HorizontalOptions="Center" Margin="0,40" Style="{StaticResource Secundario}"/>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="{OnIdiom Desktop=2, Default=1}" VerticalItemSpacing="12" HorizontalItemSpacing="12"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="20" Color="Transparent"/>
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:VentaDTO">
+                        <Border Style="{StaticResource Tarjeta}">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="4">
+                                <VerticalStackLayout Spacing="3">
+                                    <Label Text="{Binding IdPropiedadNavigation.Titulo}" Style="{StaticResource TituloTarjeta}"/>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Persona}"/>
+                                                <Span Text="  Cliente: "/>
+                                                <Span Text="{Binding IdClienteNavigation.NombreCompleto}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Trabajadores}"/>
+                                                <Span Text="  Agente: "/>
+                                                <Span Text="{Binding IdTrabajadorNavigation.NombreCompleto}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Visitas}"/>
+                                                <Span Text="{Binding Fecha, StringFormat='  {0:dd/MM/yyyy}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Grid ColumnDefinitions="Auto,*" Margin="0,4,0,0">
+                                        <Label Text="{Binding Monto, StringFormat='$ {0:N0}'}" Style="{StaticResource Precio}"/>
+                                        <Label Grid.Column="1" Text="{Binding ComisionGenerada, StringFormat='comisión $ {0:N2}'}" Style="{StaticResource Secundario}"
+                                               VerticalOptions="Center" Margin="10,0,0,0"/>
+                                    </Grid>
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Border Style="{StaticResource Badge}" BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}">
+                                            <Label Text="{Binding Estado}" Style="{StaticResource TextoBadge}"/>
+                                        </Border>
+                                        <Border Style="{StaticResource Badge}" BackgroundColor="#6C757D">
+                                            <Label Text="{Binding FormaPago}" Style="{StaticResource TextoBadge}"/>
+                                        </Border>
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
+                                        Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:VentasViewModel}}, x:DataType=vm:VentasViewModel}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="2" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Anular venta"
+                                        Command="{Binding EliminarCommand, Source={RelativeSource AncestorType={x:Type vm:VentasViewModel}}, x:DataType=vm:VentasViewModel}" CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</views:PaginaBase>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  x:Class="TerraNova.Views.UsuarioFormPage"
+                  x:DataType="vm:UsuarioFormViewModel"
+                  Title="{Binding Titulo}">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource Formulario}" Spacing="14">
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Cuenta de acceso" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Nombre de usuario" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Usuario.NombreUsuario}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Rol" Style="{StaticResource Etiqueta}"/>
+                            <Picker ItemsSource="{Binding Roles}" SelectedItem="{Binding Usuario.Rol}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- La contraseña solo se pide al registrar (la API no la cambia al modificar) -->
+                    <VerticalStackLayout IsVisible="{Binding EsNuevo}">
+                        <Label Text="Contraseña" Style="{StaticResource Etiqueta}"/>
+                        <Entry Text="{Binding Contrasena}" IsPassword="True" Placeholder="Mínimo 6 caracteres"/>
+                        <Label Text="Se guarda cifrada con BCrypt en la base de datos." Style="{StaticResource Secundario}" Margin="0,4,0,0"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Trabajador vinculado" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Picker ItemsSource="{Binding Trabajadores}" SelectedItem="{Binding Trabajador}"
+                                ItemDisplayBinding="{Binding NombreCompleto, x:DataType=dto:TrabajadorDTO}"/>
+                        <Button Grid.Column="1" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Cerrar}" VerticalOptions="Center"
+                                ToolTipProperties.Text="Quitar trabajador" Command="{Binding QuitarTrabajadorCommand}"/>
+                    </Grid>
+                    <HorizontalStackLayout Margin="0,10,0,0">
+                        <CheckBox IsChecked="{Binding Usuario.Activo}"/>
+                        <Label Text="Usuario activo" VerticalOptions="Center" TextColor="{StaticResource Texto}"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="10" Margin="0,4,0,20">
+                <ActivityIndicator IsRunning="{Binding Ocupado}" IsVisible="{Binding Ocupado}"/>
+                <Button Text="Cancelar" Style="{StaticResource BotonSecundario}" Command="{Binding CancelarCommand}"/>
+                <Button Text="Guardar usuario" Style="{StaticResource BotonPrimario}" Command="{Binding GuardarCommand}"
+                        ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Verificado}, Color=White, Size=16}"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</views:PaginaBase>

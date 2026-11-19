@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+                  x:Class="TerraNova.Views.DetallePropiedadPage"
+                  x:DataType="vm:DetallePropiedadViewModel"
+                  Title="Detalle de propiedad">
+
+    <ScrollView>
+        <!-- Windows: datos a la izquierda, mapa y visitas a la derecha. Celular: todo en una columna -->
+        <FlexLayout Wrap="Wrap" AlignItems="Start" Padding="{OnIdiom Desktop='20,16', Default='0,0,0,16'}">
+
+            <!-- ===== Columna 1: foto y datos ===== -->
+            <VerticalStackLayout FlexLayout.Basis="{OnIdiom Desktop='55%', Default='100%'}" FlexLayout.Grow="1"
+                                 Padding="{OnIdiom Desktop='8,0', Default='0'}" Spacing="12">
+                <Border StrokeShape="{OnIdiom Desktop='RoundRectangle 14', Default='RoundRectangle 0'}" Stroke="Transparent"
+                        BackgroundColor="{StaticResource Placeholder}" HeightRequest="{OnIdiom Desktop=320, Default=240}">
+                    <Grid>
+                        <Label Style="{StaticResource SinFoto}" FontSize="64" Text="{x:Static c:Iconos.Propiedades}"/>
+                        <Image Source="{Binding Propiedad.ImagenUrl, Converter={StaticResource FotoAImagen}}" Aspect="AspectFill"/>
+                    </Grid>
+                </Border>
+
+                <VerticalStackLayout Padding="{OnIdiom Desktop='0', Default='16,0'}" Spacing="6">
+                    <HorizontalStackLayout Spacing="8">
+                        <Border Style="{StaticResource Badge}" BackgroundColor="{Binding Propiedad.Estado, Converter={StaticResource EstadoAColor}}">
+                            <Label Text="{Binding Propiedad.Estado}" Style="{StaticResource TextoBadge}"/>
+                        </Border>
+                        <Border Style="{StaticResource Badge}" BackgroundColor="#6C757D">
+                            <Label Text="{Binding Propiedad.TipoOperacion}" Style="{StaticResource TextoBadge}"/>
+                        </Border>
+                        <Border Style="{StaticResource Badge}" BackgroundColor="#6C757D">
+                            <Label Text="{Binding Propiedad.Tipo}" Style="{StaticResource TextoBadge}"/>
+                        </Border>
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding Propiedad.Titulo}" FontSize="26" FontFamily="OpenSansSemibold" TextColor="{StaticResource Texto}"/>
+                    <Label Style="{StaticResource Secundario}" FontSize="14">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Ubicacion}"/>
+                                <Span Text="  "/>
+                                <Span Text="{Binding Propiedad.Direccion}"/>
+                                <Span Text=" · "/>
+                                <Span Text="{Binding Propiedad.Zona}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label Text="{Binding Propiedad.Precio, StringFormat='$ {0:N0}'}" FontSize="30" FontFamily="OpenSansSemibold" TextColor="{StaticResource Verde}"/>
+
+                    <!-- Caracteristicas -->
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="0,4">
+                        <Border Style="{StaticResource Tarjeta}" Padding="8">
+                            <VerticalStackLayout>
+                                <Label Style="{StaticResource Icono}" Text="{x:Static c:Iconos.Area}" HorizontalOptions="Center"/>
+                                <Label Text="{Binding Propiedad.AreaM2, StringFormat='{0:N0} m²'}" FontFamily="OpenSansSemibold" HorizontalOptions="Center" TextColor="{StaticResource Texto}"/>
+                                <Label Text="Área" Style="{StaticResource Secundario}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource Tarjeta}" Padding="8">
+                            <VerticalStackLayout>
+                                <Label Style="{StaticResource Icono}" Text="{x:Static c:Iconos.Habitaciones}" HorizontalOptions="Center"/>
+                                <Label Text="{Binding Propiedad.Habitaciones}" FontFamily="OpenSansSemibold" HorizontalOptions="Center" TextColor="{StaticResource Texto}"/>
+                                <Label Text="Habitaciones" Style="{StaticResource Secundario}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource Tarjeta}" Padding="8">
+                            <VerticalStackLayout>
+                                <Label Style="{StaticResource Icono}" Text="{x:Static c:Iconos.Banios}" HorizontalOptions="Center"/>
+                                <Label Text="{Binding Propiedad.Banios}" FontFamily="OpenSansSemibold" HorizontalOptions="Center" TextColor="{StaticResource Texto}"/>
+                                <Label Text="Baños" Style="{StaticResource Secundario}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="3" Style="{StaticResource Tarjeta}" Padding="8">
+                            <VerticalStackLayout>
+                                <Label Style="{StaticResource Icono}" Text="{x:Static c:Iconos.Garajes}" HorizontalOptions="Center"/>
+                                <Label Text="{Binding Propiedad.Garajes}" FontFamily="OpenSansSemibold" HorizontalOptions="Center" TextColor="{StaticResource Texto}"/>
+                                <Label Text="Garajes" Style="{StaticResource Secundario}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <HorizontalStackLayout Spacing="10" Margin="0,6">
+                        <Button Text="Editar" Style="{StaticResource BotonPrimario}" Command="{Binding EditarCommand}" IsVisible="{Binding PuedeEditar}"
+                                ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Editar}, Color=White, Size=16}"/>
+                        <Button Text="Programar visita" Style="{StaticResource BotonSecundario}" Command="{Binding ProgramarVisitaCommand}"
+                                ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.AgendarVisita}, Color={StaticResource Verde}, Size=16}"/>
+                    </HorizontalStackLayout>
+
+                    <Label Text="Descripción" Style="{StaticResource TituloSeccion}"/>
+                    <Label Text="{Binding Propiedad.Descripcion}" TextColor="{StaticResource Texto}" LineHeight="1.3"/>
+
+                    <Border Style="{StaticResource Tarjeta}" Margin="0,8,0,0">
+                        <Grid ColumnDefinitions="Auto,*,Auto,*" RowDefinitions="Auto" ColumnSpacing="8">
+                            <Label Style="{StaticResource Icono}" Text="{x:Static c:Iconos.Trabajadores}"/>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Agente asignado" Style="{StaticResource Secundario}"/>
+                                <Label Text="{Binding Propiedad.NombreTrabajador}" FontFamily="OpenSansSemibold" TextColor="{StaticResource Texto}"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" Style="{StaticResource Icono}" Text="{x:Static c:Iconos.Visitas}"/>
+                            <VerticalStackLayout Grid.Column="3">
+                                <Label Text="Publicada" Style="{StaticResource Secundario}"/>
+                                <Label Text="{Binding Propiedad.FechaPublicacion, StringFormat='{0:dd/MM/yyyy}'}" FontFamily="OpenSansSemibold" TextColor="{StaticResource Texto}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <!-- ===== Columna 2: mapa y visitas ===== -->
+            <VerticalStackLayout FlexLayout.Basis="{OnIdiom Desktop='40%', Default='100%'}" FlexLayout.Grow="1"
+                                 Padding="{OnIdiom Desktop='8,0', Default='16,0'}" Spacing="8">
+                <Label Text="Ubicación" Style="{StaticResource TituloSeccion}"/>
+                <Border x:Name="MarcoMapa" HeightRequest="{OnIdiom Desktop=320, Default=260}" StrokeShape="RoundRectangle 12" Stroke="{StaticResource Borde}">
+                    <mapsui:MapControl x:Name="Mapa"/>
+                </Border>
+                <Label x:Name="SinUbicacion" Text="Esta propiedad no tiene ubicación registrada" Style="{StaticResource Secundario}" IsVisible="False"/>
+
+                <!-- Visitas de la propiedad (api/Visita/PorPropiedad) -->
+                <Label Text="Visitas" Style="{StaticResource TituloSeccion}"/>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Visitas}" Spacing="8">
+                    <BindableLayout.EmptyView>
+                        <Label Text="Sin visitas registradas" Style="{StaticResource Secundario}"/>
+                    </BindableLayout.EmptyView>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:VisitaDTO">
+                            <Border Style="{StaticResource Tarjeta}" Padding="12">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="{Binding FechaVisita, StringFormat='{0:dd/MM/yyyy  HH:mm}'}" FontFamily="OpenSansSemibold" TextColor="{StaticResource Texto}"/>
+                                        <Label Text="{Binding IdClienteNavigation.NombreCompleto}" Style="{StaticResource Secundario}"/>
+                                        <Label Text="{Binding Comentarios}" Style="{StaticResource Secundario}" FontAttributes="Italic"/>
+                                    </VerticalStackLayout>
+                                    <Border Grid.Column="1" Style="{StaticResource Badge}" VerticalOptions="Start"
+                                            BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}">
+                                        <Label Text="{Binding Estado}" Style="{StaticResource TextoBadge}"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </FlexLayout>
+    </ScrollView>
+</views:PaginaBase>

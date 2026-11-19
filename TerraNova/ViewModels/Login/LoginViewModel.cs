@@ -1,0 +1,62 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using TerraNova.Services;
+using TerraNova.Constantes;
+
+namespace TerraNova.ViewModels
+{
+    public partial class LoginViewModel : ObservableObject
+    {
+        private readonly ServicioAutenticacion Autenticacion;
+
+        public LoginViewModel(ServicioAutenticacion autenticacion)
+        {
+            Autenticacion = autenticacion;
+        }
+
+        [ObservableProperty]
+        public partial string NombreUsuario { get; set; } = string.Empty;
+
+        [ObservableProperty]
+        public partial string Contrasena { get; set; } = string.Empty;
+
+        [ObservableProperty]
+        public partial string MensajeError { get; set; } = string.Empty;
+
+        [ObservableProperty]
+        public partial bool EstaCargando { get; set; }
+
+        [RelayCommand]
+        private async Task IniciarSesion()
+        {
+            MensajeError = string.Empty;
+            if (string.IsNullOrWhiteSpace(NombreUsuario) || string.IsNullOrWhiteSpace(Contrasena))
+            {
+                MensajeError = "Ingrese usuario y contraseña.";
+                return;
+            }
+            try
+            {
+                EstaCargando = true;
+                if (await Autenticacion.Login(NombreUsuario, Contrasena))
+                {
+                    Contrasena = string.Empty;
+                    (Shell.Current as AppShell)?.ActualizarMenu();
+                    await Shell.Current.GoToAsync(Rutas.Inicio);
+                }
+                else
+                {
+                    MensajeError = "Usuario o contraseña incorrectos.";
+                }
+            }
+            catch (Exception Ex)
+            {
+                MensajeError = $"No se pudo conectar con la API ({Configuracion.UrlApi}). {Ex.Message}";
+            }
+            finally
+            {
+                EstaCargando = false;
+            }
+        }
+    }
+}

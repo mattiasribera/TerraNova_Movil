@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                  x:Class="TerraNova.Views.TrabajadoresPage"
+                  x:DataType="vm:TrabajadoresViewModel"
+                  Title="Trabajadores">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Grid Style="{StaticResource Encabezado}" ColumnDefinitions="*,Auto">
+            <Label Text="{Binding Trabajadores.Count, StringFormat='{0} trabajadores'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
+            <Button Grid.Column="1" Text="Nuevo trabajador" Style="{StaticResource BotonPrimario}" Command="{Binding NuevoCommand}"
+                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Agregar}, Color=White, Size=16}"/>
+        </Grid>
+
+        <SearchBar Grid.Row="1" Text="{Binding TextoBusqueda}" Placeholder="Buscar por nombre, apellido o cargo"
+                   Margin="{OnIdiom Desktop='24,4,24,10', Default='12,4,12,8'}"/>
+
+        <RefreshView Grid.Row="2" Command="{Binding CargarCommand}" IsRefreshing="{Binding Cargando}">
+            <CollectionView ItemsSource="{Binding Trabajadores}" SelectionMode="None" Margin="{OnIdiom Desktop='24,0', Default='12,0'}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="{OnIdiom Desktop=2, Default=1}" VerticalItemSpacing="12" HorizontalItemSpacing="12"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="20" Color="Transparent"/>
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:TrabajadorDTO">
+                        <Border Style="{StaticResource Tarjeta}">
+                            <Grid ColumnDefinitions="64,*,Auto,Auto" ColumnSpacing="12">
+                                <!-- INVESTIGACION: AvatarView de CommunityToolkit.Maui (muestra la foto o las iniciales) -->
+                                <toolkit:AvatarView WidthRequest="60" HeightRequest="60" CornerRadius="30" VerticalOptions="Start"
+                                                    BackgroundColor="{StaticResource Verde}" TextColor="White" BorderWidth="0" FontSize="20"
+                                                    Text="{Binding Nombre}"
+                                                    ImageSource="{Binding FotoUrl, Converter={StaticResource FotoAImagen}}"/>
+                                <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                    <Label Text="{Binding NombreCompleto}" Style="{StaticResource TituloTarjeta}"/>
+                                    <Label Text="{Binding Cargo}" TextColor="{StaticResource Verde}" FontFamily="OpenSansSemibold" FontSize="13"/>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Telefono}"/>
+                                                <Span Text="{Binding Telefono, StringFormat='  {0}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Style="{StaticResource Secundario}" LineBreakMode="TailTruncation">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Correo}"/>
+                                                <Span Text="{Binding Email, StringFormat='  {0}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Comision}"/>
+                                                <Span Text="{Binding PorcentajeComision, StringFormat='  Comisión {0}%'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Grid Margin="0,4,0,0">
+                                        <Border Style="{StaticResource Badge}" BackgroundColor="#198754" IsVisible="{Binding Activo}">
+                                            <Label Text="Activo" Style="{StaticResource TextoBadge}"/>
+                                        </Border>
+                                        <Border Style="{StaticResource Badge}" BackgroundColor="Gray" IsVisible="{Binding Activo, Converter={toolkit:InvertedBoolConverter}}">
+                                            <Label Text="Inactivo" Style="{StaticResource TextoBadge}"/>
+                                        </Border>
+                                    </Grid>
+                                </VerticalStackLayout>
+                                <Button Grid.Column="2" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
+                                        Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:TrabajadoresViewModel}}, x:DataType=vm:TrabajadoresViewModel}" CommandParameter="{Binding .}"/>
+                                <Button Grid.Column="3" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.DarDeBaja}" ToolTipProperties.Text="Dar de baja"
+                                        IsVisible="{Binding Activo}"
+                                        Command="{Binding DarDeBajaCommand, Source={RelativeSource AncestorType={x:Type vm:TrabajadoresViewModel}}, x:DataType=vm:TrabajadoresViewModel}" CommandParameter="{Binding .}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</views:PaginaBase>

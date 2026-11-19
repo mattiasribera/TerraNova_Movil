@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Sistema de diseño de TerraNova (equivalente a wwwroot/css/app.css de la web).
+    Todos los colores y estilos de la app salen de aqui: para cambiar el look, se cambia este archivo.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:conv="clr-namespace:TerraNova.Converters">
+
+    <!-- ===== Paleta ===== -->
+    <Color x:Key="Verde">#1E5631</Color>
+    <Color x:Key="VerdeOscuro">#153D23</Color>
+    <Color x:Key="VerdeClaro">#E7F0E9</Color>
+    <Color x:Key="Fondo">#F4F1EA</Color>
+    <Color x:Key="Superficie">#FFFFFF</Color>
+    <Color x:Key="Borde">#E3DED3</Color>
+    <Color x:Key="Texto">#1F2421</Color>
+    <Color x:Key="TextoSuave">#6B7280</Color>
+    <Color x:Key="Rojo">#DC3545</Color>
+    <Color x:Key="Azul">#0D6EFD</Color>
+    <Color x:Key="Dorado">#B8860B</Color>
+    <Color x:Key="Morado">#6F42C1</Color>
+    <Color x:Key="Placeholder">#DDE5DA</Color>
+
+    <!-- ===== Converters ===== -->
+    <conv:EstadoAColorConverter x:Key="EstadoAColor"/>
+    <conv:FotoAImagenConverter x:Key="FotoAImagen"/>
+
+    <!-- ===== Textos ===== -->
+    <Style x:Key="TituloSeccion" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="Margin" Value="0,8,0,4"/>
+    </Style>
+
+    <Style x:Key="TituloTarjeta" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+    </Style>
+
+    <Style x:Key="Secundario" TargetType="Label">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextColor" Value="{StaticResource TextoSuave}"/>
+    </Style>
+
+    <Style x:Key="Etiqueta" TargetType="Label">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="Margin" Value="0,10,0,2"/>
+    </Style>
+
+    <Style x:Key="Precio" TargetType="Label">
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+        <Setter Property="TextColor" Value="{StaticResource Verde}"/>
+    </Style>
+
+    <!-- Icono suelto (fuente Fluent UI) -->
+    <Style x:Key="Icono" TargetType="Label">
+        <Setter Property="FontFamily" Value="Iconos"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource Verde}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Icono dentro de un texto (FormattedString) -->
+    <Style x:Key="IconoSpan" TargetType="Span">
+        <Setter Property="FontFamily" Value="Iconos"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- ===== Contenedores ===== -->
+    <!-- Tarjeta con efecto hover (en Windows se resalta el borde al pasar el mouse) -->
+    <Style x:Key="Tarjeta" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource Superficie}"/>
+        <Setter Property="Stroke" Value="{StaticResource Borde}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="Padding" Value="14"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke" Value="{StaticResource Verde}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Formularios: en Windows quedan centrados con ancho maximo -->
+    <Style x:Key="Formulario" TargetType="VerticalStackLayout">
+        <Setter Property="MaximumWidthRequest" Value="820"/>
+        <Setter Property="Padding" Value="{OnIdiom Desktop='28,20', Default='16'}"/>
+        <Setter Property="Spacing" Value="2"/>
+    </Style>
+
+    <!-- Encabezado de las listas: contador + boton "Nuevo" -->
+    <Style x:Key="Encabezado" TargetType="Grid">
+        <Setter Property="Padding" Value="{OnIdiom Desktop='24,18,24,6', Default='12,10,12,4'}"/>
+        <Setter Property="ColumnSpacing" Value="10"/>
+    </Style>
+
+    <Style x:Key="Badge" TargetType="Border">
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 10"/>
+        <Setter Property="Padding" Value="10,3"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="TextoBadge" TargetType="Label">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+    </Style>
+
+    <!-- Fondo cuando una propiedad no tiene foto -->
+    <Style x:Key="SinFoto" TargetType="Label">
+        <Setter Property="FontFamily" Value="Iconos"/>
+        <Setter Property="FontSize" Value="40"/>
+        <Setter Property="TextColor" Value="#9DB3A2"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ===== Botones ===== -->
+    <Style x:Key="BotonPrimario" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Verde}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="18,10"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource VerdeOscuro}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#A7B7AB"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BotonSecundario" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Superficie}"/>
+        <Setter Property="TextColor" Value="{StaticResource Verde}"/>
+        <Setter Property="BorderColor" Value="{StaticResource Verde}"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="14,8"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource VerdeClaro}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Boton redondo de solo icono (editar, eliminar, llamar...) -->
+    <Style x:Key="BotonIcono" TargetType="Button">
+        <Setter Property="FontFamily" Value="Iconos"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{StaticResource TextoSuave}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="WidthRequest" Value="38"/>
+        <Setter Property="HeightRequest" Value="38"/>
+        <Setter Property="MinimumHeightRequest" Value="38"/>
+        <Setter Property="MinimumWidthRequest" Value="38"/>
+        <Setter Property="CornerRadius" Value="19"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="VerticalOptions" Value="Start"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource VerdeClaro}"/>
+                            <Setter Property="TextColor" Value="{StaticResource Verde}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="BotonIconoPeligro" TargetType="Button" BasedOn="{StaticResource BotonIcono}">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="#FBE3E5"/>
+                            <Setter Property="TextColor" Value="{StaticResource Rojo}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- ===== Validacion (CommunityToolkit) ===== -->
+    <Style x:Key="Invalido" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource Rojo}"/>
+    </Style>
+    <Style x:Key="Valido" TargetType="Entry">
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+    </Style>
+
+    <!-- ===== Controles de formulario (texto oscuro siempre legible) ===== -->
+    <Style TargetType="Entry" ApplyToDerivedTypes="True">
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource TextoSuave}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Superficie}"/>
+    </Style>
+    <Style TargetType="Editor">
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Superficie}"/>
+    </Style>
+    <Style TargetType="Picker">
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="TitleColor" Value="{StaticResource TextoSuave}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Superficie}"/>
+    </Style>
+    <Style TargetType="DatePicker">
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Superficie}"/>
+    </Style>
+    <Style TargetType="TimePicker">
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Superficie}"/>
+    </Style>
+    <Style TargetType="SearchBar">
+        <Setter Property="TextColor" Value="{StaticResource Texto}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource TextoSuave}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Superficie}"/>
+    </Style>
+    <Style TargetType="CheckBox">
+        <Setter Property="Color" Value="{StaticResource Verde}"/>
+        <!-- En Windows el CheckBox reserva ~120px de ancho; lo ajustamos para que la etiqueta quede pegada -->
+        <Setter Property="WidthRequest" Value="{OnPlatform WinUI=36, Default=-1}"/>
+        <Setter Property="MinimumWidthRequest" Value="0"/>
+    </Style>
+    <Style TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource Verde}"/>
+    </Style>
+</ResourceDictionary>

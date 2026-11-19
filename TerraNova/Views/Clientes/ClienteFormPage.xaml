@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                  x:Class="TerraNova.Views.ClienteFormPage"
+                  x:DataType="vm:ClienteFormViewModel"
+                  Title="{Binding Titulo}">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource Formulario}" Spacing="14">
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Datos personales" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Nombre" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Cliente.Nombre}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Apellido" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Cliente.Apellido}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Cédula de identidad" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Cliente.Ci}" Keyboard="Numeric"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Tipo de cliente" Style="{StaticResource Etiqueta}"/>
+                            <Picker ItemsSource="{Binding TiposCliente}" SelectedItem="{Binding Cliente.TipoCliente}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Contacto" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Teléfono" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Cliente.Telefono}" Keyboard="Telephone"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Email" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Cliente.Email}" Keyboard="Email">
+                                <Entry.Behaviors>
+                                    <!-- INVESTIGACION: EmailValidationBehavior de CommunityToolkit.Maui -->
+                                    <toolkit:EmailValidationBehavior InvalidStyle="{StaticResource Invalido}" ValidStyle="{StaticResource Valido}"
+                                                                     Flags="ValidateOnValueChanged"/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Label Text="Dirección" Style="{StaticResource Etiqueta}"/>
+                    <Entry Text="{Binding Cliente.Direccion}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="10" Margin="0,4,0,20">
+                <ActivityIndicator IsRunning="{Binding Ocupado}" IsVisible="{Binding Ocupado}"/>
+                <Button Text="Cancelar" Style="{StaticResource BotonSecundario}" Command="{Binding CancelarCommand}"/>
+                <Button Text="Guardar cliente" Style="{StaticResource BotonPrimario}" Command="{Binding GuardarCommand}"
+                        ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Verificado}, Color=White, Size=16}"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</views:PaginaBase>

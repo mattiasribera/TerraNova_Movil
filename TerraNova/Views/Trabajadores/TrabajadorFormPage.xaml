@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:h="clr-namespace:TerraNova.Helpers"
+                  xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                  x:Class="TerraNova.Views.TrabajadorFormPage"
+                  x:DataType="vm:TrabajadorFormViewModel"
+                  Title="{Binding Titulo}">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource Formulario}" Spacing="14">
+
+            <!-- Foto: se comprime y se sube como archivo a la API -->
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
+                    <Border WidthRequest="110" HeightRequest="110" StrokeShape="RoundRectangle 55" Stroke="{StaticResource Borde}"
+                            BackgroundColor="{StaticResource Placeholder}">
+                        <Grid>
+                            <Label Style="{StaticResource SinFoto}" Text="{x:Static c:Iconos.Persona}"/>
+                            <Image Source="{Binding Foto, Converter={StaticResource FotoAImagen}}" Aspect="AspectFill"/>
+                            <ActivityIndicator IsRunning="{Binding SubiendoFoto}" IsVisible="{Binding SubiendoFoto}"/>
+                        </Grid>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6">
+                        <Label Text="Foto de perfil" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                        <Label Text="Se optimiza automáticamente antes de subirla." Style="{StaticResource Secundario}"/>
+                        <FlexLayout Wrap="Wrap">
+                            <Button Text="Galería" Style="{StaticResource BotonSecundario}" Margin="0,0,8,6" Command="{Binding ElegirFotoCommand}" CommandParameter="Galeria"
+                                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Galeria}, Color={StaticResource Verde}, Size=16}"/>
+                            <Button Text="Cámara" Style="{StaticResource BotonSecundario}" Margin="0,0,8,6" Command="{Binding ElegirFotoCommand}" CommandParameter="Camara"
+                                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Camara}, Color={StaticResource Verde}, Size=16}"/>
+                            <Button Text="Quitar" Style="{StaticResource BotonSecundario}" Margin="0,0,8,6" Command="{Binding QuitarFotoCommand}"
+                                    IsVisible="{Binding Foto, Converter={toolkit:IsStringNotNullOrEmptyConverter}}"
+                                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Cerrar}, Color={StaticResource Verde}, Size=16}"/>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Datos personales" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Nombre" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Trabajador.Nombre}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Apellido" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Trabajador.Apellido}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Cédula de identidad" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Trabajador.Ci}" Keyboard="Numeric"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Fecha de nacimiento" Style="{StaticResource Etiqueta}"/>
+                            <DatePicker Date="{Binding Trabajador.FechaNacimiento}" Format="dd/MM/yyyy"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Teléfono" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Trabajador.Telefono}" Keyboard="Telephone"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Email" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Trabajador.Email}" Keyboard="Email">
+                                <Entry.Behaviors>
+                                    <toolkit:EmailValidationBehavior InvalidStyle="{StaticResource Invalido}" ValidStyle="{StaticResource Valido}"
+                                                                     Flags="ValidateOnValueChanged"/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Datos laborales" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Cargo" Style="{StaticResource Etiqueta}"/>
+                            <Picker ItemsSource="{Binding Cargos}" SelectedItem="{Binding Trabajador.Cargo}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Comisión (%)" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Comision}" Keyboard="Numeric" Placeholder="Ej: 3,5">
+                                <Entry.Behaviors>
+                                    <toolkit:TextValidationBehavior InvalidStyle="{StaticResource Invalido}" ValidStyle="{StaticResource Valido}"
+                                                                    Flags="ValidateOnValueChanged" RegexPattern="{x:Static h:Numeros.PatronDecimal}"/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="Contratación" Style="{StaticResource Etiqueta}"/>
+                            <DatePicker Date="{Binding Trabajador.FechaContratacion}" Format="dd/MM/yyyy"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <HorizontalStackLayout Margin="0,10,0,0">
+                        <CheckBox IsChecked="{Binding Trabajador.Activo}"/>
+                        <Label Text="Trabajador activo" VerticalOptions="Center" TextColor="{StaticResource Texto}"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="10" Margin="0,4,0,20">
+                <ActivityIndicator IsRunning="{Binding Ocupado}" IsVisible="{Binding Ocupado}"/>
+                <Button Text="Cancelar" Style="{StaticResource BotonSecundario}" Command="{Binding CancelarCommand}"/>
+                <Button Text="Guardar trabajador" Style="{StaticResource BotonPrimario}" Command="{Binding GuardarCommand}"
+                        ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Verificado}, Color=White, Size=16}"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</views:PaginaBase>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:h="clr-namespace:TerraNova.Helpers"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                  xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+                  x:Class="TerraNova.Views.PropiedadFormPage"
+                  x:DataType="vm:PropiedadFormViewModel"
+                  Title="{Binding Titulo}">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource Formulario}" Spacing="14">
+
+            <!-- ===== Datos generales ===== -->
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Datos generales" Style="{StaticResource TituloSeccion}" Margin="0"/>
+
+                    <Label Text="Título" Style="{StaticResource Etiqueta}"/>
+                    <Entry Text="{Binding Propiedad.Titulo}" Placeholder="Ej: Casa con jardín en Equipetrol"/>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Tipo" Style="{StaticResource Etiqueta}"/>
+                            <Picker ItemsSource="{Binding Tipos}" SelectedItem="{Binding Propiedad.Tipo}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Operación" Style="{StaticResource Etiqueta}"/>
+                            <Picker ItemsSource="{Binding Operaciones}" SelectedItem="{Binding Propiedad.TipoOperacion}"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="Estado" Style="{StaticResource Etiqueta}"/>
+                            <Picker ItemsSource="{Binding Estados}" SelectedItem="{Binding Propiedad.Estado}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="2*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Dirección" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Propiedad.Direccion}" Placeholder="Calle y número"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Zona" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Propiedad.Zona}" Placeholder="Ej: Equipetrol"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Label Text="Agente asignado" Style="{StaticResource Etiqueta}"/>
+                    <Picker ItemsSource="{Binding Trabajadores}" SelectedItem="{Binding Trabajador}" IsEnabled="{Binding EsAdmin}"
+                            ItemDisplayBinding="{Binding NombreCompleto, x:DataType=dto:TrabajadorDTO}"/>
+
+                    <Label Text="Descripción" Style="{StaticResource Etiqueta}"/>
+                    <Editor Text="{Binding Propiedad.Descripcion}" HeightRequest="90" Placeholder="Características, acabados, servicios..."/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ===== Precio y caracteristicas ===== -->
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout>
+                    <Label Text="Precio y características" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="Precio ($)" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Precio}" Keyboard="Numeric" Placeholder="Ej: 85000">
+                                <Entry.Behaviors>
+                                    <!-- INVESTIGACION: validacion numerica en tiempo real (CommunityToolkit.Maui) -->
+                                    <toolkit:TextValidationBehavior InvalidStyle="{StaticResource Invalido}" ValidStyle="{StaticResource Valido}"
+                                                                    Flags="ValidateOnValueChanged" RegexPattern="{x:Static h:Numeros.PatronDecimal}"/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Área (m²)" Style="{StaticResource Etiqueta}"/>
+                            <Entry Text="{Binding Area}" Keyboard="Numeric" Placeholder="Ej: 250">
+                                <Entry.Behaviors>
+                                    <toolkit:TextValidationBehavior InvalidStyle="{StaticResource Invalido}" ValidStyle="{StaticResource Valido}"
+                                                                    Flags="ValidateOnValueChanged" RegexPattern="{x:Static h:Numeros.PatronDecimal}"/>
+                                </Entry.Behaviors>
+                            </Entry>
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Propiedad.Habitaciones, StringFormat='Habitaciones: {0}'}" Style="{StaticResource Etiqueta}"/>
+                            <Stepper Value="{Binding Propiedad.Habitaciones}" Minimum="0" Maximum="20"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="{Binding Propiedad.Banios, StringFormat='Baños: {0}'}" Style="{StaticResource Etiqueta}"/>
+                            <Stepper Value="{Binding Propiedad.Banios}" Minimum="0" Maximum="20"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="{Binding Propiedad.Garajes, StringFormat='Garajes: {0}'}" Style="{StaticResource Etiqueta}"/>
+                            <Stepper Value="{Binding Propiedad.Garajes}" Minimum="0" Maximum="20"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ===== Foto: se comprime en el dispositivo y se sube como archivo; en la BD solo queda la ruta ===== -->
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Foto" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Border HeightRequest="220" StrokeShape="RoundRectangle 12" Stroke="Transparent" BackgroundColor="{StaticResource Placeholder}">
+                        <Grid>
+                            <Label Style="{StaticResource SinFoto}" FontSize="56" Text="{x:Static c:Iconos.Galeria}"/>
+                            <Image Source="{Binding Imagen, Converter={StaticResource FotoAImagen}}" Aspect="AspectFill"/>
+                            <ActivityIndicator IsRunning="{Binding SubiendoFoto}" IsVisible="{Binding SubiendoFoto}"/>
+                        </Grid>
+                    </Border>
+                    <FlexLayout Wrap="Wrap">
+                        <Button Text="Galería" Style="{StaticResource BotonSecundario}" Margin="0,0,8,6" Command="{Binding ElegirFotoCommand}" CommandParameter="Galeria"
+                                ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Galeria}, Color={StaticResource Verde}, Size=16}"/>
+                        <Button Text="Cámara" Style="{StaticResource BotonSecundario}" Margin="0,0,8,6" Command="{Binding ElegirFotoCommand}" CommandParameter="Camara"
+                                ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Camara}, Color={StaticResource Verde}, Size=16}"/>
+                        <Button Text="Quitar" Style="{StaticResource BotonSecundario}" Margin="0,0,8,6" Command="{Binding QuitarFotoCommand}"
+                                IsVisible="{Binding Imagen, Converter={toolkit:IsStringNotNullOrEmptyConverter}}"
+                                ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Cerrar}, Color={StaticResource Verde}, Size=16}"/>
+                    </FlexLayout>
+                    <Entry Text="{Binding Imagen}" Placeholder="...o pegue la URL https:// de una imagen" Keyboard="Url" FontSize="13"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ===== Ubicacion: tocar el mapa coloca el marcador ===== -->
+            <Border Style="{StaticResource Tarjeta}" Padding="20">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Ubicación" Style="{StaticResource TituloSeccion}" Margin="0"/>
+                    <Label Style="{StaticResource Secundario}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Ubicacion}"/>
+                                <Span Text="  "/>
+                                <Span Text="{Binding TextoUbicacion}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Border HeightRequest="{OnIdiom Desktop=360, Default=300}" StrokeShape="RoundRectangle 12" Stroke="{StaticResource Borde}">
+                        <mapsui:MapControl x:Name="Mapa"/>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ===== Acciones ===== -->
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="10" Margin="0,4,0,20">
+                <ActivityIndicator IsRunning="{Binding Ocupado}" IsVisible="{Binding Ocupado}"/>
+                <Button Text="Cancelar" Style="{StaticResource BotonSecundario}" Command="{Binding CancelarCommand}"/>
+                <Button Text="Guardar propiedad" Style="{StaticResource BotonPrimario}" Command="{Binding GuardarCommand}"
+                        ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Verificado}, Color=White, Size=16}"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</views:PaginaBase>

@@ -1,0 +1,19 @@
+# ===== Compilacion =====
+bin/
+obj/
+*.user
+.vs/
+.vscode/
+.idea/
+
+# ===== Configuracion local de cada PC (cadena de conexion, correo) =====
+# Cada compañero crea la suya copiando TerraNova.Api/appsettings.Local.example.json
+appsettings.Local.json
+
+# ===== Imagenes subidas (cada PC tiene las suyas, igual que su base de datos) =====
+TerraNova.Api/wwwroot/imagenes/**
+!TerraNova.Api/wwwroot/imagenes/.gitkeep
+
+# ===== Windows / otros =====
+Thumbs.db
+*.log

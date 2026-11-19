@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:PaginaBase xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:views="clr-namespace:TerraNova.Views"
+                  xmlns:vm="clr-namespace:TerraNova.ViewModels"
+                  xmlns:c="clr-namespace:TerraNova.Constantes"
+                  xmlns:dto="clr-namespace:TerraNova.Shared;assembly=TerraNova.Shared"
+                  x:Class="TerraNova.Views.PropiedadesPage"
+                  x:DataType="vm:PropiedadesViewModel"
+                  Title="Propiedades">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <!-- Encabezado -->
+        <Grid Style="{StaticResource Encabezado}" ColumnDefinitions="*,Auto">
+            <Label Text="{Binding Propiedades.Count, StringFormat='{0} propiedades'}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
+            <Button Grid.Column="1" Text="Nueva propiedad" Style="{StaticResource BotonPrimario}" Command="{Binding NuevaCommand}"
+                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Agregar}, Color=White, Size=16}"/>
+        </Grid>
+
+        <!-- Filtros (igual que la web: texto, tipo, estado y "solo mis propiedades" para agentes) -->
+        <Grid Grid.Row="1" Padding="{OnIdiom Desktop='24,4,24,10', Default='12,4,12,8'}" RowSpacing="6" ColumnSpacing="8"
+              ColumnDefinitions="{OnIdiom Desktop='2*,*,*,Auto', Default='*,*,Auto'}"
+              RowDefinitions="{OnIdiom Desktop='Auto,Auto', Default='Auto,Auto,Auto'}">
+            <SearchBar Grid.ColumnSpan="{OnIdiom Desktop=1, Default=3}" Text="{Binding TextoBusqueda}" Placeholder="Buscar por título, zona o dirección"/>
+            <Picker Grid.Row="{OnIdiom Desktop=0, Default=1}" Grid.Column="{OnIdiom Desktop=1, Default=0}"
+                    Title="Tipo" ItemsSource="{Binding Tipos}" SelectedItem="{Binding TipoFiltro}"/>
+            <Picker Grid.Row="{OnIdiom Desktop=0, Default=1}" Grid.Column="{OnIdiom Desktop=2, Default=1}"
+                    Title="Estado" ItemsSource="{Binding Estados}" SelectedItem="{Binding EstadoFiltro}"/>
+            <Button Grid.Row="{OnIdiom Desktop=0, Default=1}" Grid.Column="{OnIdiom Desktop=3, Default=2}"
+                    Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Limpiar}" VerticalOptions="Center"
+                    ToolTipProperties.Text="Limpiar filtros" Command="{Binding LimpiarFiltrosCommand}"/>
+            <HorizontalStackLayout Grid.Row="{OnIdiom Desktop=1, Default=2}" Grid.ColumnSpan="3" IsVisible="{Binding EsAgente}">
+                <CheckBox IsChecked="{Binding SoloMias}"/>
+                <Label Text="Mostrar solo mis propiedades asignadas" VerticalOptions="Center" TextColor="{StaticResource Texto}"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <RefreshView Grid.Row="2" Command="{Binding CargarCommand}" IsRefreshing="{Binding Cargando}">
+            <CollectionView ItemsSource="{Binding Propiedades}" SelectionMode="None" Margin="{OnIdiom Desktop='24,0', Default='12,0'}">
+                <CollectionView.EmptyView>
+                    <Label Text="No hay propiedades que coincidan con los filtros" HorizontalOptions="Center" Margin="0,40" Style="{StaticResource Secundario}"/>
+                </CollectionView.EmptyView>
+                <!-- 2 columnas en Windows, 1 en el celular -->
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="{OnIdiom Desktop=2, Default=1}" VerticalItemSpacing="12" HorizontalItemSpacing="12"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="20" Color="Transparent"/>
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:PropiedadDTO">
+                        <Border Style="{StaticResource Tarjeta}" Padding="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding VerDetalleCommand, Source={RelativeSource AncestorType={x:Type vm:PropiedadesViewModel}}, x:DataType=vm:PropiedadesViewModel}"
+                                                      CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="140,*" ColumnSpacing="14">
+                                <Grid BackgroundColor="{StaticResource Placeholder}" HeightRequest="150">
+                                    <Label Style="{StaticResource SinFoto}" Text="{x:Static c:Iconos.Propiedades}"/>
+                                    <Image Source="{Binding ImagenUrl, Converter={StaticResource FotoAImagen}}" Aspect="AspectFill"/>
+                                </Grid>
+                                <Grid Grid.Column="1" Padding="0,12,8,10" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="3">
+                                    <Label Text="{Binding Titulo}" Style="{StaticResource TituloTarjeta}"/>
+                                    <Label Grid.Row="1" Style="{StaticResource Secundario}" LineBreakMode="TailTruncation">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Ubicacion}"/>
+                                                <Span Text=" "/>
+                                                <Span Text="{Binding Zona}"/>
+                                                <Span Text="  ·  "/>
+                                                <Span Text="{Binding Tipo}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="2" Style="{StaticResource Secundario}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Area}"/>
+                                                <Span Text="{Binding AreaM2, StringFormat=' {0:N0} m²'}"/>
+                                                <Span Text="     "/>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Habitaciones}"/>
+                                                <Span Text="{Binding Habitaciones, StringFormat=' {0}'}"/>
+                                                <Span Text="     "/>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Banios}"/>
+                                                <Span Text="{Binding Banios, StringFormat=' {0}'}"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Grid.Row="3" Text="{Binding Precio, StringFormat='$ {0:N0}'}" Style="{StaticResource Precio}" VerticalOptions="Center"/>
+                                    <Grid Grid.Row="4" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="6">
+                                        <Border Style="{StaticResource Badge}" BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}">
+                                            <Label Text="{Binding Estado}" Style="{StaticResource TextoBadge}"/>
+                                        </Border>
+                                        <Label Grid.Column="1" Text="{Binding TipoOperacion}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
+                                        <Button Grid.Column="2" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
+                                                Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:PropiedadesViewModel}}, x:DataType=vm:PropiedadesViewModel}"
+                                                CommandParameter="{Binding .}"/>
+                                        <Button Grid.Column="3" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Eliminar"
+                                                Command="{Binding EliminarCommand, Source={RelativeSource AncestorType={x:Type vm:PropiedadesViewModel}}, x:DataType=vm:PropiedadesViewModel}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</views:PaginaBase>

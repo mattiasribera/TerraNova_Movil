@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Menu lateral equivalente a Layout/MainLayout.razor de la web.
+    En Windows queda FIJO a la izquierda (como el sidebar web); en el celular se abre con el boton de menu.
+-->
+<Shell
+    x:Class="TerraNova.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TerraNova"
+    xmlns:views="clr-namespace:TerraNova.Views"
+    xmlns:c="clr-namespace:TerraNova.Constantes"
+    Title="TerraNova"
+    FlyoutBehavior="{OnIdiom Desktop=Locked, Default=Flyout}"
+    FlyoutWidth="250"
+    FlyoutBackgroundColor="{StaticResource Verde}"
+    Shell.BackgroundColor="{StaticResource Verde}"
+    Shell.ForegroundColor="White"
+    Shell.TitleColor="White">
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="22,28,22,20" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <Border WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 12" Stroke="Transparent" BackgroundColor="White">
+                <Label FontFamily="Iconos" Text="{x:Static c:Iconos.Propiedades}" FontSize="26" TextColor="{StaticResource Verde}"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Border>
+            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                <Label Text="TERRANOVA" FontSize="20" FontFamily="OpenSansSemibold" TextColor="White"/>
+                <Label Text="Bienes Raíces" FontSize="13" TextColor="#CFE3D3"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!-- Plantilla de cada opcion: icono + texto, resaltada cuando esta seleccionada -->
+    <Shell.ItemTemplate>
+        <DataTemplate x:DataType="BaseShellItem">
+            <Grid ColumnDefinitions="28,*" ColumnSpacing="12" Padding="22,11" Margin="10,1" x:Name="Fila">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="Transparent"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#2E6B43"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+                <Image Source="{Binding FlyoutIcon}" WidthRequest="20" HeightRequest="20" VerticalOptions="Center"/>
+                <Label Grid.Column="1" Text="{Binding Title}" TextColor="White" FontSize="15" VerticalOptions="Center"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <Shell.FlyoutFooter>
+        <VerticalStackLayout Padding="20" Spacing="10">
+            <BoxView HeightRequest="1" Color="#3B7350"/>
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Label FontFamily="Iconos" Text="{x:Static c:Iconos.Persona}" FontSize="22" TextColor="#CFE3D3" VerticalOptions="Center"/>
+                <VerticalStackLayout Grid.Column="1">
+                    <Label x:Name="LblUsuario" TextColor="White" FontFamily="OpenSansSemibold" FontSize="14"/>
+                    <Label x:Name="LblRol" TextColor="#CFE3D3" FontSize="12"/>
+                </VerticalStackLayout>
+            </Grid>
+            <Button Text="Cerrar sesión" Clicked="CerrarSesion" BackgroundColor="#2E6B43" TextColor="White" CornerRadius="8"
+                    ImageSource="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Salir}, Color=White, Size=16}"/>
+        </VerticalStackLayout>
+    </Shell.FlyoutFooter>
+
+    <!-- Login fuera del menu -->
+    <ShellContent Route="Login" ContentTemplate="{DataTemplate views:LoginPage}"
+                  FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled" Shell.NavBarIsVisible="False"/>
+
+    <FlyoutItem Title="Inicio" Route="Inicio" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Inicio}, Color=White}">
+        <ShellContent Title="Inicio" ContentTemplate="{DataTemplate views:DashboardPage}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Clientes" Route="Clientes" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Clientes}, Color=White}">
+        <ShellContent Title="Clientes" ContentTemplate="{DataTemplate views:ClientesPage}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Propiedades" Route="Propiedades" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Propiedades}, Color=White}">
+        <ShellContent Title="Propiedades" ContentTemplate="{DataTemplate views:PropiedadesPage}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Mapa" Route="Mapa" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Mapa}, Color=White}">
+        <ShellContent Title="Mapa de propiedades" ContentTemplate="{DataTemplate views:MapaPropiedadesPage}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Trabajadores" Route="Trabajadores" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Trabajadores}, Color=White}">
+        <ShellContent Title="Trabajadores" ContentTemplate="{DataTemplate views:TrabajadoresPage}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Ventas" Route="Ventas" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Ventas}, Color=White}">
+        <ShellContent Title="Ventas" ContentTemplate="{DataTemplate views:VentasPage}"/>
+    </FlyoutItem>
+    <FlyoutItem Title="Visitas" Route="Visitas" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Visitas}, Color=White}">
+        <ShellContent Title="Visitas" ContentTemplate="{DataTemplate views:VisitasPage}"/>
+    </FlyoutItem>
+    <FlyoutItem x:Name="ItemUsuarios" Title="Usuarios" Route="Usuarios" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Usuarios}, Color=White}">
+        <ShellContent Title="Usuarios" ContentTemplate="{DataTemplate views:UsuariosPage}"/>
+    </FlyoutItem>
+    <!-- Practica en clase (vector de propiedades + CommunityToolkit) -->
+    <FlyoutItem Title="Práctica" Route="Practica" Icon="{FontImageSource FontFamily=Iconos, Glyph={x:Static c:Iconos.Practica}, Color=White}">
+        <ShellContent Title="Práctica: registrar propiedad" ContentTemplate="{DataTemplate local:MainPage}"/>
+    </FlyoutItem>
+
+</Shell>

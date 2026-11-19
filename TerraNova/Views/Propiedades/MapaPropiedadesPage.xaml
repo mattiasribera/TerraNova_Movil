@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mapsui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
+             x:Class="TerraNova.Views.MapaPropiedadesPage"
+             Title="Mapa de propiedades">
+
+    <Grid>
+        <mapsui:MapControl x:Name="Mapa"/>
+
+        <!-- Leyenda flotante -->
+        <Border Style="{StaticResource Tarjeta}" Margin="16" Padding="14,10" HorizontalOptions="Start" VerticalOptions="End">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Toque un marcador para ver el detalle" Style="{StaticResource Secundario}" FontSize="12"/>
+                <HorizontalStackLayout Spacing="14">
+                    <HorizontalStackLayout Spacing="5">
+                        <Ellipse Fill="#198754" WidthRequest="12" HeightRequest="12" VerticalOptions="Center"/>
+                        <Label Text="Disponible" FontSize="13" TextColor="{StaticResource Texto}"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="5">
+                        <Ellipse Fill="#FFC107" WidthRequest="12" HeightRequest="12" VerticalOptions="Center"/>
+                        <Label Text="Reservada" FontSize="13" TextColor="{StaticResource Texto}"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="5">
+                        <Ellipse Fill="#DC3545" WidthRequest="12" HeightRequest="12" VerticalOptions="Center"/>
+                        <Label Text="Vendida" FontSize="13" TextColor="{StaticResource Texto}"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="5">
+                        <Ellipse Fill="#0D6EFD" WidthRequest="12" HeightRequest="12" VerticalOptions="Center"/>
+                        <Label Text="Alquilada" FontSize="13" TextColor="{StaticResource Texto}"/>
+                    </HorizontalStackLayout>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentPage>

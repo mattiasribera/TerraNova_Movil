@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="TerraNova.Api/TerraNova.Api.csproj" />
+  <Project Path="TerraNova.Shared/TerraNova.Shared.csproj" />
+  <Project Path="TerraNova/TerraNova.csproj" />
+</Solution>
