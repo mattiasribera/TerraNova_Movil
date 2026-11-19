@@ -93,6 +93,16 @@ namespace TerraNova.ViewModels
                 return;
             }
 
+            // Una visita "Programada" tiene que ser a futuro. Las Realizadas/Canceladas pueden ser pasadas
+            // (se esta registrando algo que ya ocurrio). La API valida la misma regla.
+            if (Estado == "Programada" && Fecha.Date + Hora < DateTime.Now)
+            {
+                await Dialogos.Alerta("Fecha inválida",
+                    "Una visita programada debe ser para una fecha y hora futura.\n" +
+                    "Si la visita ya ocurrió, cambie el estado a \"Realizada\" o \"Cancelada\".");
+                return;
+            }
+
             Visita.IdCliente = Cliente.Id;
             Visita.IdPropiedad = Propiedad.Id;
             // Un agente siempre agenda las visitas a su propio nombre

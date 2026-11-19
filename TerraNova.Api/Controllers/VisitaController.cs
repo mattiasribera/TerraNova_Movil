@@ -119,6 +119,10 @@ namespace TerraNova.Api.Controllers
         [Route("Guardar")]
         public async Task<IActionResult> Guardar(VisitaDTO ObjVisita)
         {
+            // Regla de negocio: una visita "Programada" tiene que ser a futuro
+            if (ObjVisita.Estado == "Programada" && ObjVisita.FechaVisita < DateTime.Now.AddMinutes(-5))
+                return BadRequest(new ResponseAPI<int> { EsCorrecto = false,
+                    Mensaje = "Una visita programada debe ser para una fecha y hora futura" });
             if (!User.EsAdmin())
             {
                 if (User.IdTrabajador() is not int Mio) return this.Prohibido("Su usuario no tiene un trabajador vinculado");
@@ -248,6 +252,10 @@ namespace TerraNova.Api.Controllers
         [Route("Modificar/{Cod}")]
         public async Task<IActionResult> Modificar(VisitaDTO NuevosDatos, int Cod)
         {
+            // Regla de negocio: una visita "Programada" tiene que ser a futuro
+            if (NuevosDatos.Estado == "Programada" && NuevosDatos.FechaVisita < DateTime.Now.AddMinutes(-5))
+                return BadRequest(new ResponseAPI<int> { EsCorrecto = false,
+                    Mensaje = "Una visita programada debe ser para una fecha y hora futura" });
             if (!User.EsAdmin())
             {
                 var Duenio = await Contexto.Visitas.Where(x => x.Id == Cod).Select(x => (int?)x.IdTrabajador).FirstOrDefaultAsync();
