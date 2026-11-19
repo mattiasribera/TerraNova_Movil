@@ -49,7 +49,7 @@
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>
-                    <Label Text="{Binding Propiedad.Precio, StringFormat='$ {0:N0}'}" FontSize="30" FontFamily="OpenSansSemibold" TextColor="{StaticResource Verde}"/>
+                    <Label Text="{Binding Propiedad.PrecioTexto}" FontSize="30" FontFamily="OpenSansSemibold" TextColor="{StaticResource Verde}"/>
 
                     <!-- Caracteristicas -->
                     <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="0,4">

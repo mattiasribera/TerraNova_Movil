@@ -86,7 +86,7 @@
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-                                    <Label Grid.Row="3" Text="{Binding Precio, StringFormat='$ {0:N0}'}" Style="{StaticResource Precio}" VerticalOptions="Center"/>
+                                    <Label Grid.Row="3" Text="{Binding PrecioTexto}" Style="{StaticResource Precio}" VerticalOptions="Center"/>
                                     <Grid Grid.Row="4" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="6">
                                         <Border Style="{StaticResource Badge}" BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}">
                                             <Label Text="{Binding Estado}" Style="{StaticResource TextoBadge}"/>

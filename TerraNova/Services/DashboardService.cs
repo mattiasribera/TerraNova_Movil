@@ -64,7 +64,8 @@ namespace TerraNova.Services
                 TotalVentas = ListaVentas.Count,
                 TotalTrabajadores = TareaTrabajadores.Result.Count,
                 UltimasPropiedades = ListaPropiedades.OrderByDescending(P => P.FechaPublicacion).Take(5).ToList(),
-                ActividadReciente = Actividades.OrderByDescending(A => A.Fecha).Take(5).ToList()
+                // Solo lo que ya ocurrio (las visitas programadas a futuro no son "actividad reciente")
+                ActividadReciente = Actividades.Where(A => A.Fecha <= DateTime.Now).OrderByDescending(A => A.Fecha).Take(5).ToList()
             };
         }
     }

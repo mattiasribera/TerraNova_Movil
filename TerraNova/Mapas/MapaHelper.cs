@@ -56,7 +56,9 @@ namespace TerraNova.Mapas
                     Text = Texto,
                     Offset = new Offset(0, -24),
                     BackColor = new Mapsui.Styles.Brush(Mapsui.Styles.Color.White),
-                    ForeColor = Mapsui.Styles.Color.Black
+                    ForeColor = Mapsui.Styles.Color.Black,
+                    // Solo se ve con zoom de calle (resolucion <= 5 m/pixel); de lejos solo los puntos de color
+                    MaxVisible = 5
                 });
             }
             return Marcador;

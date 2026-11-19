@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -24,6 +24,10 @@ namespace TerraNova.Shared
         public string Zona { get; set; } = string.Empty;
 
         public decimal Precio { get; set; }
+
+        // Solo para mostrar: "$ 1.890 /mes" en alquileres, "$ 185.000" en ventas (no viaja en el JSON)
+        [System.Text.Json.Serialization.JsonIgnore]
+        public string PrecioTexto => TipoOperacion == "Alquiler" ? $"$ {Precio:N0} /mes" : $"$ {Precio:N0}";
 
         public double AreaM2 { get; set; }
 

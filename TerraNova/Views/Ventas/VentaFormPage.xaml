@@ -32,7 +32,7 @@
                                 <Span Text="  ·  "/>
                                 <Span Text="{Binding Propiedad.TipoOperacion}"/>
                                 <Span Text="  ·  "/>
-                                <Span Text="{Binding Propiedad.Precio, StringFormat='$ {0:N0}'}"/>
+                                <Span Text="{Binding Propiedad.PrecioTexto}"/>
                             </FormattedString>
                         </Label.FormattedText>
                     </Label>

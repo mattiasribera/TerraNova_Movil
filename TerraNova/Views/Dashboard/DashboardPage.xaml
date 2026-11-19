@@ -100,7 +100,7 @@
                                             </Border>
                                             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
                                                 <Label Text="{Binding Titulo}" Style="{StaticResource TituloTarjeta}" FontSize="15"/>
-                                                <Label Text="{Binding Precio, StringFormat='$ {0:N0}'}" Style="{StaticResource Precio}" FontSize="14"/>
+                                                <Label Text="{Binding PrecioTexto}" Style="{StaticResource Precio}" FontSize="14"/>
                                             </VerticalStackLayout>
                                             <Border Grid.Column="2" Style="{StaticResource Badge}"
                                                     BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}">

@@ -1,4 +1,4 @@
-﻿using TerraNova.Api.Services;
+using TerraNova.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using TerraNova.Api.Models;
 using TerraNova.Shared;
@@ -283,8 +283,16 @@ namespace TerraNova.Api.Controllers
                         IdTrabajador = v.IdTrabajador,
                         FechaVisita = v.FechaVisita,
                         Estado = v.Estado,
-                        Comentarios = v.Comentarios
+                        Comentarios = v.Comentarios,
+                        // Nombre del cliente para mostrarlo en el detalle de la propiedad
+                        IdClienteNavigation = new ClienteDTO
+                        {
+                            Id = v.IdClienteNavigation.Id,
+                            Nombre = v.IdClienteNavigation.Nombre,
+                            Apellido = v.IdClienteNavigation.Apellido
+                        }
                     })
+                    .OrderByDescending(v => v.FechaVisita)
                     .ToListAsync();
 
                 RespuestaApi.EsCorrecto = true;
