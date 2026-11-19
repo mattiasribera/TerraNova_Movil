@@ -11,6 +11,14 @@ namespace TerraNova
     {
         public static MauiApp CreateMauiApp()
         {
+            // Formato de Bolivia en toda la app ($ 185.000, 3,5 %, fechas en español),
+            // sin importar el idioma configurado en el celular o en Windows
+            var Bolivia = new System.Globalization.CultureInfo("es-BO");
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = Bolivia;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = Bolivia;
+            System.Globalization.CultureInfo.CurrentCulture = Bolivia;
+            System.Globalization.CultureInfo.CurrentUICulture = Bolivia;
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()

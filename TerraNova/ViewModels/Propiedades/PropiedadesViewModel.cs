@@ -21,13 +21,16 @@ namespace TerraNova.ViewModels
         }
 
         public ObservableCollection<PropiedadDTO> Propiedades { get; } = new();
-        public List<string> Tipos { get; } = new() { "Todos", "Casa", "Departamento", "Terreno", "Oficina", "Local" };
-        public List<string> Estados { get; } = new() { "Todos", "Disponible", "Reservada", "Vendida", "Alquilada" };
+        private const string TodosLosTipos = "Todos los tipos";
+        private const string TodosLosEstados = "Todos los estados";
+
+        public List<string> Tipos { get; } = new() { TodosLosTipos, "Casa", "Departamento", "Terreno", "Oficina", "Local" };
+        public List<string> Estados { get; } = new() { TodosLosEstados, "Disponible", "Reservada", "Vendida", "Alquilada" };
         public bool EsAgente => !Autenticacion.EsAdmin;
 
         [ObservableProperty] public partial string TextoBusqueda { get; set; } = string.Empty;
-        [ObservableProperty] public partial string TipoFiltro { get; set; } = "Todos";
-        [ObservableProperty] public partial string EstadoFiltro { get; set; } = "Todos";
+        [ObservableProperty] public partial string TipoFiltro { get; set; } = TodosLosTipos;
+        [ObservableProperty] public partial string EstadoFiltro { get; set; } = TodosLosEstados;
         [ObservableProperty] public partial bool SoloMias { get; set; }
         [ObservableProperty] public partial bool Cargando { get; set; }
 
@@ -61,9 +64,9 @@ namespace TerraNova.ViewModels
             IEnumerable<PropiedadDTO> R = Todas;
             if (SoloMias)
                 R = R.Where(P => P.IdTrabajador == Autenticacion.UsuarioActual?.IdTrabajador);
-            if (TipoFiltro != "Todos")
+            if (TipoFiltro != TodosLosTipos)
                 R = R.Where(P => P.Tipo == TipoFiltro);
-            if (EstadoFiltro != "Todos")
+            if (EstadoFiltro != TodosLosEstados)
                 R = R.Where(P => P.Estado == EstadoFiltro);
             var Texto = TextoBusqueda.Trim().ToLower();
             if (Texto != "")
@@ -78,8 +81,8 @@ namespace TerraNova.ViewModels
         private void LimpiarFiltros()
         {
             TextoBusqueda = string.Empty;
-            TipoFiltro = "Todos";
-            EstadoFiltro = "Todos";
+            TipoFiltro = TodosLosTipos;
+            EstadoFiltro = TodosLosEstados;
             SoloMias = false;
         }
 

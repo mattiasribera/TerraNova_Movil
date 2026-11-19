@@ -55,12 +55,21 @@
                                 <TapGestureRecognizer Command="{Binding VerDetalleCommand, Source={RelativeSource AncestorType={x:Type vm:PropiedadesViewModel}}, x:DataType=vm:PropiedadesViewModel}"
                                                       CommandParameter="{Binding .}"/>
                             </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="140,*" ColumnSpacing="14">
-                                <Grid BackgroundColor="{StaticResource Placeholder}" HeightRequest="150">
+                            <!-- Windows: foto a la izquierda. Celular: foto arriba a todo el ancho y datos abajo -->
+                            <Grid ColumnDefinitions="{OnIdiom Desktop='150,*', Default='*'}" RowDefinitions="{OnIdiom Desktop='Auto', Default='Auto,Auto'}"
+                                  ColumnSpacing="14">
+                                <Grid BackgroundColor="{StaticResource Placeholder}" HeightRequest="{OnIdiom Desktop=160, Default=190}">
                                     <Label Style="{StaticResource SinFoto}" Text="{x:Static c:Iconos.Propiedades}"/>
                                     <Image Source="{Binding ImagenUrl, Converter={StaticResource FotoAImagen}}" Aspect="AspectFill"/>
+                                    <!-- Estado sobre la foto -->
+                                    <Border Style="{StaticResource Badge}" Margin="10" VerticalOptions="Start"
+                                            BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}">
+                                        <Label Text="{Binding Estado}" Style="{StaticResource TextoBadge}"/>
+                                    </Border>
                                 </Grid>
-                                <Grid Grid.Column="1" Padding="0,12,8,10" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="3">
+                                <Grid Grid.Row="{OnIdiom Desktop=0, Default=1}" Grid.Column="{OnIdiom Desktop=1, Default=0}"
+                                      Padding="{OnIdiom Desktop='0,12,8,10', Default='14,10,8,10'}"
+                                      RowDefinitions="Auto,Auto,Auto,*" RowSpacing="4">
                                     <Label Text="{Binding Titulo}" Style="{StaticResource TituloTarjeta}"/>
                                     <Label Grid.Row="1" Style="{StaticResource Secundario}" LineBreakMode="TailTruncation">
                                         <Label.FormattedText>
@@ -70,10 +79,12 @@
                                                 <Span Text="{Binding Zona}"/>
                                                 <Span Text="  ·  "/>
                                                 <Span Text="{Binding Tipo}"/>
+                                                <Span Text="  ·  "/>
+                                                <Span Text="{Binding TipoOperacion}"/>
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-                                    <Label Grid.Row="2" Style="{StaticResource Secundario}">
+                                    <Label Grid.Row="2" Style="{StaticResource Secundario}" LineBreakMode="NoWrap">
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Area}"/>
@@ -84,19 +95,21 @@
                                                 <Span Text="     "/>
                                                 <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Banios}"/>
                                                 <Span Text="{Binding Banios, StringFormat=' {0}'}"/>
+                                                <Span Text="     "/>
+                                                <Span Style="{StaticResource IconoSpan}" Text="{x:Static c:Iconos.Garajes}"/>
+                                                <Span Text="{Binding Garajes, StringFormat=' {0}'}"/>
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-                                    <Label Grid.Row="3" Text="{Binding PrecioTexto}" Style="{StaticResource Precio}" VerticalOptions="Center"/>
-                                    <Grid Grid.Row="4" ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="6">
-                                        <Border Style="{StaticResource Badge}" BackgroundColor="{Binding Estado, Converter={StaticResource EstadoAColor}}">
-                                            <Label Text="{Binding Estado}" Style="{StaticResource TextoBadge}"/>
-                                        </Border>
-                                        <Label Grid.Column="1" Text="{Binding TipoOperacion}" Style="{StaticResource Secundario}" VerticalOptions="Center"/>
-                                        <Button Grid.Column="2" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
+                                    <!-- Precio + acciones en la misma fila -->
+                                    <Grid Grid.Row="3" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="4" VerticalOptions="End">
+                                        <Label Text="{Binding PrecioTexto}" Style="{StaticResource Precio}" VerticalOptions="Center"/>
+                                        <Button Grid.Column="1" Style="{StaticResource BotonIcono}" Text="{x:Static c:Iconos.Editar}" ToolTipProperties.Text="Editar"
+                                                VerticalOptions="Center"
                                                 Command="{Binding EditarCommand, Source={RelativeSource AncestorType={x:Type vm:PropiedadesViewModel}}, x:DataType=vm:PropiedadesViewModel}"
                                                 CommandParameter="{Binding .}"/>
-                                        <Button Grid.Column="3" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Eliminar"
+                                        <Button Grid.Column="2" Style="{StaticResource BotonIconoPeligro}" Text="{x:Static c:Iconos.Eliminar}" ToolTipProperties.Text="Eliminar"
+                                                VerticalOptions="Center"
                                                 IsVisible="{Binding EsAgente, Converter={toolkit:InvertedBoolConverter}, Source={RelativeSource AncestorType={x:Type vm:PropiedadesViewModel}}, x:DataType=vm:PropiedadesViewModel}"
                                                 Command="{Binding EliminarCommand, Source={RelativeSource AncestorType={x:Type vm:PropiedadesViewModel}}, x:DataType=vm:PropiedadesViewModel}"
                                                 CommandParameter="{Binding .}"/>

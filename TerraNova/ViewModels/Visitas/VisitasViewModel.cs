@@ -19,10 +19,12 @@ namespace TerraNova.ViewModels
         }
 
         public ObservableCollection<VisitaDTO> Visitas { get; } = new();
-        public List<string> Estados { get; } = new() { "Todos", "Programada", "Realizada", "Cancelada" };
+        private const string TodosLosEstados = "Todos los estados";
+
+        public List<string> Estados { get; } = new() { TodosLosEstados, "Programada", "Realizada", "Cancelada" };
 
         [ObservableProperty] public partial string TextoBusqueda { get; set; } = string.Empty;
-        [ObservableProperty] public partial string EstadoFiltro { get; set; } = "Todos";
+        [ObservableProperty] public partial string EstadoFiltro { get; set; } = TodosLosEstados;
         [ObservableProperty] public partial bool FiltrarFechas { get; set; }
         [ObservableProperty] public partial DateTime FechaDesde { get; set; } = DateTime.Today.AddMonths(-1);
         [ObservableProperty] public partial DateTime FechaHasta { get; set; } = DateTime.Today.AddMonths(1);
@@ -50,7 +52,7 @@ namespace TerraNova.ViewModels
         private void Filtrar()
         {
             IEnumerable<VisitaDTO> R = Todas;
-            if (EstadoFiltro != "Todos")
+            if (EstadoFiltro != TodosLosEstados)
                 R = R.Where(V => V.Estado == EstadoFiltro);
             if (FiltrarFechas)
                 R = R.Where(V => V.FechaVisita >= FechaDesde && V.FechaVisita <= FechaHasta.AddDays(1));
@@ -70,7 +72,7 @@ namespace TerraNova.ViewModels
         private void LimpiarFiltros()
         {
             TextoBusqueda = string.Empty;
-            EstadoFiltro = "Todos";
+            EstadoFiltro = TodosLosEstados;
             FiltrarFechas = false;
         }
 
