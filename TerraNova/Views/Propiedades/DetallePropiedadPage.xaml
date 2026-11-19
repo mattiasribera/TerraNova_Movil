@@ -12,11 +12,11 @@
 
     <ScrollView>
         <!-- Windows: datos a la izquierda, mapa y visitas a la derecha. Celular: todo en una columna -->
-        <FlexLayout Wrap="Wrap" AlignItems="Start" Padding="{OnIdiom Desktop='20,16', Default='0,0,0,16'}">
+        <Grid ColumnDefinitions="{OnIdiom Desktop='11*,9*', Default='*'}" RowDefinitions="{OnIdiom Desktop='Auto', Default='Auto,Auto'}"
+              ColumnSpacing="24" RowSpacing="16" Padding="{OnIdiom Desktop='28,20', Default='0,0,0,16'}">
 
             <!-- ===== Columna 1: foto y datos ===== -->
-            <VerticalStackLayout FlexLayout.Basis="{OnIdiom Desktop='55%', Default='100%'}" FlexLayout.Grow="1"
-                                 Padding="{OnIdiom Desktop='8,0', Default='0'}" Spacing="12">
+            <VerticalStackLayout VerticalOptions="Start" Spacing="12">
                 <Border StrokeShape="{OnIdiom Desktop='RoundRectangle 14', Default='RoundRectangle 0'}" Stroke="Transparent"
                         BackgroundColor="{StaticResource Placeholder}" HeightRequest="{OnIdiom Desktop=320, Default=240}">
                     <Grid>
@@ -111,8 +111,8 @@
             </VerticalStackLayout>
 
             <!-- ===== Columna 2: mapa y visitas ===== -->
-            <VerticalStackLayout FlexLayout.Basis="{OnIdiom Desktop='40%', Default='100%'}" FlexLayout.Grow="1"
-                                 Padding="{OnIdiom Desktop='8,0', Default='16,0'}" Spacing="8">
+            <VerticalStackLayout Grid.Column="{OnIdiom Desktop=1, Default=0}" Grid.Row="{OnIdiom Desktop=0, Default=1}" VerticalOptions="Start"
+                                 Padding="{OnIdiom Desktop='0', Default='16,0'}" Spacing="8">
                 <Label Text="Ubicación" Style="{StaticResource TituloSeccion}"/>
                 <Border x:Name="MarcoMapa" HeightRequest="{OnIdiom Desktop=320, Default=260}" StrokeShape="RoundRectangle 12" Stroke="{StaticResource Borde}">
                     <mapsui:MapControl x:Name="Mapa"/>
@@ -144,6 +144,6 @@
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
             </VerticalStackLayout>
-        </FlexLayout>
+        </Grid>
     </ScrollView>
 </views:PaginaBase>
