@@ -41,6 +41,15 @@
                     <controls:CampoContrasena Texto="{Binding Contrasena}" Placeholder="Contraseña"
                                               ComandoEnter="{Binding IniciarSesionCommand}"/>
 
+                    <!-- Servidor de la API: se puede cambiar sin reinstalar la app (ver Services/Configuracion.cs) -->
+                    <Label Text="Servidor" Style="{StaticResource Etiqueta}"/>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Entry Text="{Binding UrlServidor}" Placeholder="https://servidor-de-terranova"
+                               Keyboard="Url" IsSpellCheckEnabled="False" IsTextPredictionEnabled="False"/>
+                        <Button Grid.Column="1" Text="Restablecer" Style="{StaticResource BotonSecundario}"
+                                Command="{Binding RestablecerServidorCommand}"/>
+                    </Grid>
+
                     <Label Text="{Binding MensajeError}" TextColor="{StaticResource Rojo}" Margin="0,6,0,0"
                            IsVisible="{Binding MensajeError, Converter={toolkit:IsStringNotNullOrEmptyConverter}}"/>
 

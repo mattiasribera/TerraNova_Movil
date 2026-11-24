@@ -38,8 +38,9 @@ namespace TerraNova
                     fonts.AddFont("FluentIcons.ttf", "Iconos");
                 });
 
-            // Un solo HttpClient apuntando a TerraNova.Api (equivalente al HttpClient de Blazor.Client/Program.cs)
-            builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(Configuracion.UrlApi) });
+            // Un solo HttpClient apuntando a TerraNova.Api (equivalente al HttpClient de Blazor.Client/Program.cs).
+            // RedireccionServidor envia cada peticion al servidor elegido en el login (Configuracion.UrlApi).
+            builder.Services.AddSingleton(new HttpClient(new RedireccionServidor()) { BaseAddress = Configuracion.DireccionInterna });
 
             // Servicios (consumen la API)
             builder.Services.AddSingleton<ServicioAutenticacion>();

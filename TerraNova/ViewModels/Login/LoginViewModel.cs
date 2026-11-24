@@ -26,6 +26,16 @@ namespace TerraNova.ViewModels
         [ObservableProperty]
         public partial bool EstaCargando { get; set; }
 
+        // Servidor (API) al que se conecta la app; se guarda en el dispositivo al iniciar sesion
+        [ObservableProperty]
+        public partial string UrlServidor { get; set; } = Configuracion.UrlApi;
+
+        [RelayCommand]
+        private void RestablecerServidor()
+        {
+            UrlServidor = Configuracion.UrlPorDefecto;
+        }
+
         [RelayCommand]
         private async Task IniciarSesion()
         {
@@ -35,6 +45,16 @@ namespace TerraNova.ViewModels
                 MensajeError = "Ingrese usuario y contraseña.";
                 return;
             }
+
+            var Servidor = Configuracion.NormalizarUrl(UrlServidor);
+            if (Servidor == null)
+            {
+                MensajeError = "La dirección del servidor no es válida. Ejemplo: https://midominio.com";
+                return;
+            }
+            UrlServidor = Servidor;
+            Configuracion.GuardarUrlApi(Servidor);
+
             try
             {
                 EstaCargando = true;
