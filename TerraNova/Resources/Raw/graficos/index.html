@@ -12,8 +12,13 @@
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; }
         #grafico { width: 100%; height: 100%; }
     </style>
-    <!-- Puente de MAUI: permite enviar mensajes a C# -->
-    <script src="_hwv/HybridWebView.js"></script>
+    <!-- Puente de MAUI: permite enviar mensajes a C#.
+         .NET MAUI 10 lo sirve en _framework/hybridwebview.js (en Android la ruta _hwv/ devuelve 404);
+         si no carga, se intenta la ruta anterior para no romper otras plataformas. -->
+    <script src="_framework/hybridwebview.js"></script>
+    <script>
+        if (!window.HybridWebView) document.write('<script src="_hwv/HybridWebView.js"><\/script>');
+    </script>
     <script src="echarts.min.js"></script>
 </head>
 <body>
