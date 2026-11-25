@@ -8,7 +8,7 @@ namespace TerraNova.Services
         // Servidor publico (HTTPS) que usa la version distribuida (Release) por defecto.
         // La API corre en la PC del equipo y se publica con un tunel de Cloudflare.
         // Si la URL del tunel cambia, el usuario la corrige en el campo "Servidor" del login sin reinstalar.
-        public const string UrlPublicaPorDefecto = "https://buyers-exception-sufficient-vitamins.trycloudflare.com/";
+        public const string UrlPublicaPorDefecto = "https://moore-electron-latin-availability.trycloudflare.com/";
 
         // Clave en Preferences donde se guarda el servidor elegido por el usuario
         private const string ClaveServidor = "terranova_servidor";
